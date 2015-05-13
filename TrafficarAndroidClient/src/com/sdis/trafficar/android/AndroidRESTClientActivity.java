@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
@@ -33,10 +36,11 @@ import android.widget.TextView;
 
 public class AndroidRESTClientActivity extends Activity {
 	
-	private static final String SERVICE_URL = "http://192.168.1.4:8080/TrafficarAPI/rest/MembershipService/Teste";
-	private static final String SERVICE_URL_REGISTER = "http://192.168.1.4:8080/TrafficarAPI/rest/MembershipService/Register";
+	private static final String SERVICE_URL = "http://192.168.1.4:8080/TrafficarAPI/rest/MembershipService";
 	private static final String TAG = "AndroidRESTClientActivity";
 	
+	private static final String HASHING = "SHA-256";
+	private static final String CHARSET = "UTF-8";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,21 +50,36 @@ public class AndroidRESTClientActivity extends Activity {
 	
 	public void retrieveSampleData(View v) {
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "GETting data...");
-		wst.execute(new String[] { SERVICE_URL });
+		wst.execute(new String[] { SERVICE_URL + "/Teste" });
 	}
 	
-	public void registerUser(View v) {
-		EditText editUsername = (EditText) findViewById(R.id.username);
-		EditText editPassword = (EditText) findViewById(R.id.password);
+	public void loginUser(View v) {
 		
-		String username = editUsername.getText().toString();
-		String password = editPassword.getText().toString();
+		String username = getUsername();
+		String password = getPassword();
 		
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...");
 		wst.addNameValuePair("username", username);
 		wst.addNameValuePair("password", password);
 		
-		wst.execute(new String[] { SERVICE_URL_REGISTER });
+		String url = SERVICE_URL + "/Login";
+		
+		wst.execute(new String[] { url });
+		
+	}
+	
+	public void registerUser(View v) {
+		
+		String username = getUsername();
+		String password = getPassword();
+		
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...");
+		wst.addNameValuePair("username", username);
+		wst.addNameValuePair("password", password);
+		
+		String url =  SERVICE_URL + "/Register";
+		
+		wst.execute(new String[] { url });
 		
 	}
 	
@@ -83,7 +102,44 @@ public class AndroidRESTClientActivity extends Activity {
 		 }
 	}
 	
+	private String getUsername() {
+		EditText editUsername = (EditText) findViewById(R.id.username);
+		return editUsername.getText().toString();
+	}
 	
+	private String getPassword() {
+		EditText editPassword = (EditText) findViewById(R.id.password);
+		
+		String password = editPassword.getText().toString();
+
+		return hash(password);
+	}
+	
+	// Credits to: http://stackoverflow.com/questions/5531455/how-to-encode-some-string-with-sha256-in-java
+	private String hash(String base) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance(HASHING);
+	        byte[] hash = digest.digest(base.getBytes(CHARSET));
+			StringBuffer hexString = new StringBuffer();
+
+	        for (int i = 0; i < hash.length; i++) {
+	            String hex = Integer.toHexString(0xff & hash[i]);
+	            if(hex.length() == 1) hexString.append('0');
+	            hexString.append(hex);
+	        }
+
+	        return hexString.toString();
+			
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
+	}
 	
 	private class WebServiceTask extends AsyncTask<String, Integer, String> {
 		

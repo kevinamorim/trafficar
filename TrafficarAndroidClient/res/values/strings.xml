@@ -1,9 +1,10 @@
 <resources>
 
-    <string name="app_name">TrafficarAndroidClient</string>
+    <string name="app_name">TRAFFICAR</string>
     <string name="retrieve">TEST</string>
     <string name="username">Username:</string>
     <string name="password">Password:</string>
     <string name="register">Register</string>
+    <string name="login">Login</string>
 
 </resources>

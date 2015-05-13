@@ -19,7 +19,7 @@ public class MembershipService {
 		db.connect();
 		db.init();
 		db.registerUser(username, password);
-		return "{ \"success\" : \"false\", \"message\" : \" Register successfull.\" }";
+		return "{ \"success\" : \"true\", \"message\" : \" Register successfull.\" }";
 	}
 	
 	@POST
@@ -32,9 +32,9 @@ public class MembershipService {
 		boolean valid = db.checkLogin(username, password);
 		
 		if(valid) {
-			return "<html><head><meta charset='utf-8'></head><body><h1>User logged successfully: </h1><h2>" + username + "</h2></body></html>";
+			return "{ \"success\" : \"true\", \"message\" : \" Welcome back! \" }";
 		} else {
-			return "<html><head><meta charset='utf-8'></head><body><h1>Username or password invalid</h1></body></html>";
+			return "{ \"success\" : \"false\", \"message\" : \" Username or password invalid.\" }";
 		}
 	}
 	
