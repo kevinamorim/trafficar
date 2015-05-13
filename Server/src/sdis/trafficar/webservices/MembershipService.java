@@ -1,5 +1,6 @@
 package sdis.trafficar.webservices;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -35,6 +36,14 @@ public class MembershipService {
 		} else {
 			return "<html><head><meta charset='utf-8'></head><body><h1>Username or password invalid</h1></body></html>";
 		}
+	}
+	
+	@GET
+	@Path("/Teste")
+	@Produces(MediaType.TEXT_HTML)
+	public String Teste() {
+		System.out.println("AQUI!");
+		return "<h1>Y suck!</h1><h2> loooooool </h2>";
 	}
 
 }
