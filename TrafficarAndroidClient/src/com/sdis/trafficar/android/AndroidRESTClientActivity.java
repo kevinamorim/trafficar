@@ -9,12 +9,15 @@ import java.util.ArrayList;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONObject;
 
 import com.sdis.trafficar.android.client.R;
 
@@ -25,11 +28,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class AndroidRESTClientActivity extends Activity {
 	
-	private static final String SERVICE_URL = "http://192.168.1.142:8080/TrafficarAPI/rest/MembershipService/Teste";
-	
+	private static final String SERVICE_URL = "http://192.168.1.4:8080/TrafficarAPI/rest/MembershipService/Teste";
+	private static final String SERVICE_URL_REGISTER = "http://192.168.1.4:8080/TrafficarAPI/rest/MembershipService/Register";
 	private static final String TAG = "AndroidRESTClientActivity";
 	
 	
@@ -44,10 +49,45 @@ public class AndroidRESTClientActivity extends Activity {
 		wst.execute(new String[] { SERVICE_URL });
 	}
 	
+	public void registerUser(View v) {
+		EditText editUsername = (EditText) findViewById(R.id.username);
+		EditText editPassword = (EditText) findViewById(R.id.password);
+		
+		String username = editUsername.getText().toString();
+		String password = editPassword.getText().toString();
+		
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...");
+		wst.addNameValuePair("username", username);
+		wst.addNameValuePair("password", password);
+		
+		wst.execute(new String[] { SERVICE_URL_REGISTER });
+		
+	}
+	
+	public void handleResponse(String response) {
+		 TextView tvMessage = (TextView) findViewById(R.id.message);
+		 tvMessage.setText("");
+		 
+		 try {
+			 JSONObject jso = new JSONObject(response);
+			 String message = jso.getString("message");
+			 boolean test = jso.getBoolean("success");
+			 
+			 if(test) Log.d(TAG, "Success");
+			 else Log.d(TAG, "No success");
+			 
+			 tvMessage.setText(message);
+			 
+		 } catch(Exception e) {
+			 Log.e(TAG, e.getLocalizedMessage(), e);
+		 }
+	}
+	
 	
 	
 	private class WebServiceTask extends AsyncTask<String, Integer, String> {
 		
+		public static final int POST_TASK = 1;
 		public static final int GET_TASK = 2;
 		private static final String TAG = "WebServiceTask";
 		
@@ -65,6 +105,10 @@ public class AndroidRESTClientActivity extends Activity {
 			this.taskType = taskType;
 			this.mContext = mContext;
 			this.processMessage = processMessage;
+		}
+		
+		public void addNameValuePair(String name, String value) {
+			params.add(new BasicNameValuePair(name, value));
 		}
 
 		@Override
@@ -90,8 +134,16 @@ public class AndroidRESTClientActivity extends Activity {
                 }
  
             }
+            
+            Log.d(TAG, result);
  
             return result;
+		}
+		
+		@Override
+		protected void onPostExecute(String response) {
+			handleResponse(response);
+			Log.d(TAG, "chamou");
 		}
 
 		private String inputStreamToString(InputStream is) {
@@ -123,11 +175,17 @@ public class AndroidRESTClientActivity extends Activity {
  
             try {
                 switch (taskType) {
+                case POST_TASK:
+                	HttpPost httppost = new HttpPost(url);
+                	httppost.setEntity(new UrlEncodedFormEntity(params));
+                	response = httpclient.execute(httppost);
+                	break;
  
                 case GET_TASK:
                     HttpGet httpget = new HttpGet(url);
                     response = httpclient.execute(httpget);
                     break;
+                    
                 }
             } catch (Exception e) {
  

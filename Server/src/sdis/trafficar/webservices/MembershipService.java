@@ -13,13 +13,13 @@ public class MembershipService {
 	
 	@POST
 	@Path("/Register")
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String Register(@FormParam("username") String username, @FormParam("password") String password) {
 		MyDatabase db = new MyDatabase("teste");
 		db.connect();
 		db.init();
 		db.registerUser(username, password);
-		return "<html><head><meta charset='utf-8'></head><body><h1>Registered user: </h1><h2>" + username + "</h2></body></html>";
+		return "{ \"success\" : \"false\", \"message\" : \" Register successfull.\" }";
 	}
 	
 	@POST
@@ -40,10 +40,10 @@ public class MembershipService {
 	
 	@GET
 	@Path("/Teste")
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String Teste() {
 		System.out.println("AQUI!");
-		return "<h1>Y suck!</h1><h2> loooooool </h2>";
+		return "{ teste : 1 }";
 	}
 
 }

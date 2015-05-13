@@ -1,25 +1,85 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/tableLayout1"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:shrinkColumns="*"
-	android:stretchColumns="*" >
-	
-    <TableRow 
+    android:id="@+id/tableLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:shrinkColumns="*"
+    android:stretchColumns="*" >
+
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-        
-        
+
         <Button
             android:id="@+id/bn_retrieve"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="retrieveSampleData"
             android:text="@string/retrieve" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            style=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/username" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:inputType="text" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            style=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password" >
+        </TextView>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:inputType="textPassword" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/bn_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="registerUser"
+            android:text="@string/register" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            style=""
+            android:id="@+id/message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="" >
+        </TextView>
         
     </TableRow>
-	
-	
-	
+
 </TableLayout>
