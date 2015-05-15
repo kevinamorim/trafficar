@@ -18,8 +18,15 @@ public class MembershipService {
 		MyDatabase db = new MyDatabase("teste");
 		db.connect();
 		db.init();
-		db.registerUser(username, password);
-		return "{ \"success\" : \"true\", \"message\" : \" Register successfull.\" }";
+		boolean success = db.registerUser(username, password);
+		db.close();
+		
+		if(success) {
+			return "{ \"success\" : \"true\", \"message\" : \" Register successfull.\" }";
+		} else {
+			return "{ \"success\" : \"false\", \"message\" : \" Username invalid, try another one.\" }";
+		}
+
 	}
 	
 	@POST
@@ -30,20 +37,20 @@ public class MembershipService {
 		db.connect();
 		db.init();
 		boolean valid = db.checkLogin(username, password);
+		db.close();
 		
 		if(valid) {
-			return "{ \"success\" : \"true\", \"message\" : \" Welcome back! \" }";
+			return "{ \"success\" : \"true\", \"message\" : \" Welcome back! \", \"username\" : \"" + username + "\"}";
 		} else {
 			return "{ \"success\" : \"false\", \"message\" : \" Username or password invalid.\" }";
 		}
 	}
 	
 	@GET
-	@Path("/Teste")
+	@Path("/Test")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String Teste() {
-		System.out.println("AQUI!");
-		return "{ teste : 1 }";
+	public String Test() {
+		return "{ \"success\" :  \"true\", \"message\" : \" Connection established! \" }";
 	}
 
 }

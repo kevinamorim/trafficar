@@ -58,9 +58,17 @@ public class MyDatabase {
 		executeUpdateStmt(createUsersTable);
 	}
 	
-	public void registerUser(String username, String password) {
-		String query = "INSERT INTO User (Username, Password) VALUES ('" + username + "', + '" + password + "')";
-		executeUpdateStmt(query);
+	public boolean registerUser(String username, String password) {
+		
+		if(validateUsername(username)) {
+			System.out.println("Username valid.");
+			String query = "INSERT INTO User (Username, Password) VALUES ('" + username + "', + '" + password + "')";
+			executeUpdateStmt(query);
+			return true;
+		}
+		System.out.println("Username invalid.");
+		return false;
+
 	}
 	
 	public boolean checkLogin(String username, String password) {
@@ -84,7 +92,19 @@ public class MyDatabase {
 		
 	}
 	
-
+	public boolean validateUsername(String username) {
+		String query = "SELECT COUNT(*) FROM User WHERE Username = \"" + username + "\";";
+		try {
+			ResultSet rs = stmt.executeQuery(query);
+			return rs.getInt(1) == 0;
+		} catch(SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
 	public void executeUpdateStmt(String query) {
 		
 		try {

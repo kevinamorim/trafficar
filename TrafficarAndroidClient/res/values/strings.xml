@@ -6,5 +6,7 @@
     <string name="password">Password:</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+    
+    <string name="btnCheck">CHECK</string>
 
 </resources>
