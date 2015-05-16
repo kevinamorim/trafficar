@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.sdis.trafficar.android.AndroidRESTClientActivity"
+            android:name="com.sdis.trafficar.android.AuthenticationActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

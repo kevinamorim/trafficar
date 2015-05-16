@@ -13,6 +13,7 @@ public class MyDatabaseTest {
 	
 	ConnectionSource connectionSource;
 	Dao<User, String> userDao;
+	Dao<TrafficInformation, String> trafficInformationDao;
 
 	public MyDatabaseTest(String name) {
 		
@@ -22,6 +23,9 @@ public class MyDatabaseTest {
 			
 			userDao = DaoManager.createDao(connectionSource, User.class);
 			TableUtils.createTableIfNotExists(connectionSource, User.class);
+			
+			trafficInformationDao = DaoManager.createDao(connectionSource, TrafficInformation.class);
+			TableUtils.createTableIfNotExists(connectionSource, TrafficInformation.class);
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -46,7 +50,7 @@ public class MyDatabaseTest {
 		QueryBuilder<User, String> queryBuilder = userDao.queryBuilder();
 		try {
 			// Check for duplicate username
-			if(queryBuilder.where().eq("Username", username).countOf() == 0) {
+			if(queryBuilder.where().eq(User.USERNAME_FIELD_NAME, username).countOf() == 0) {
 				User user = new User();
 				user.setUsername(username);
 				user.setPassword(password);
@@ -75,5 +79,27 @@ public class MyDatabaseTest {
 		
 	}
 	
+	public void addTrafficInformation(String description, String username) {
+		TrafficInformation tf = new TrafficInformation();
+		tf.setDescription(description);
+		User user = null;
+		
+		try {
+			user = userDao.queryForFirst(userDao.queryBuilder().where().eq(User.USERNAME_FIELD_NAME, username).prepare());
+		} catch (SQLException e) {
+			System.out.println("NOT FOUND!");
+			e.printStackTrace();
+			return;
+		}
+		
+		tf.setUser(user);
+		
+		try {
+			trafficInformationDao.create(tf);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 }

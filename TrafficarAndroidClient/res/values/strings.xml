@@ -8,5 +8,6 @@
     <string name="login">Login</string>
     
     <string name="btnCheck">CHECK</string>
+    <string name="btnSend">Send</string>
 
 </resources>

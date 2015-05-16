@@ -11,13 +11,12 @@ import sdis.trafficar.database.MyDatabaseTest;
 @Path("MembershipService")
 public class MembershipService {
 	
-	private static final String DB_NAME = "teste";
-	
 	@POST
 	@Path("/Register")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Register(@FormParam("username") String username, @FormParam("password") String password) {
-		MyDatabaseTest db = new MyDatabaseTest(DB_NAME);
+		
+		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		boolean success = db.registerUser(username, password);
 		db.close();
 		
@@ -31,10 +30,10 @@ public class MembershipService {
 	
 	@POST
 	@Path("/Login")
-	@Produces(MediaType.TEXT_HTML)
+	@Produces(MediaType.APPLICATION_JSON)
 	public String Login(@FormParam("username") String username, @FormParam("password") String password) {
 
-		MyDatabaseTest db = new MyDatabaseTest(DB_NAME);
+		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		boolean success = db.loginUser(username, password);
 		db.close();
 		
@@ -49,6 +48,7 @@ public class MembershipService {
 	@Path("/Test")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Test() {
+		System.out.println("MembershipService/Test");
 		return "{ \"success\" :  \"true\", \"message\" : \" Connection established! \" }";
 	}
 
