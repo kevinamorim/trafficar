@@ -6,18 +6,18 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import sdis.trafficar.database.MyDatabase;
+import sdis.trafficar.database.MyDatabaseTest;
 
 @Path("MembershipService")
 public class MembershipService {
+	
+	private static final String DB_NAME = "teste";
 	
 	@POST
 	@Path("/Register")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Register(@FormParam("username") String username, @FormParam("password") String password) {
-		MyDatabase db = new MyDatabase("teste");
-		db.connect();
-		db.init();
+		MyDatabaseTest db = new MyDatabaseTest(DB_NAME);
 		boolean success = db.registerUser(username, password);
 		db.close();
 		
@@ -33,13 +33,12 @@ public class MembershipService {
 	@Path("/Login")
 	@Produces(MediaType.TEXT_HTML)
 	public String Login(@FormParam("username") String username, @FormParam("password") String password) {
-		MyDatabase db = new MyDatabase("teste");
-		db.connect();
-		db.init();
-		boolean valid = db.checkLogin(username, password);
+
+		MyDatabaseTest db = new MyDatabaseTest(DB_NAME);
+		boolean success = db.loginUser(username, password);
 		db.close();
 		
-		if(valid) {
+		if(success) {
 			return "{ \"success\" : \"true\", \"message\" : \" Welcome back! \", \"username\" : \"" + username + "\"}";
 		} else {
 			return "{ \"success\" : \"false\", \"message\" : \" Username or password invalid.\" }";

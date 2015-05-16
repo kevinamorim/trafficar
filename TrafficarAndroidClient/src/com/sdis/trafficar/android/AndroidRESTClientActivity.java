@@ -49,9 +49,7 @@ public class AndroidRESTClientActivity extends Activity {
 	private static final int CHECK = 2;
 
 	private int task = -1;
-
-	private boolean success;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,11 +65,9 @@ public class AndroidRESTClientActivity extends Activity {
 		wst.execute(new String[] { url });
 	}
 
-
 	public void loginUser(View v) {
 
 		task = LOGIN;
-		success = false;
 
 		String username = getUsername();
 		String password = getPassword();
@@ -84,18 +80,11 @@ public class AndroidRESTClientActivity extends Activity {
 
 		wst.execute(new String[] { url });
 
-		if(success) {
-			Intent intent = new Intent(this, HomeActivity.class);
-			intent.putExtra("com.sdis.trafficar.android.USERNAME", username);
-			startActivity(intent);
-		}
-
 	}
 
 	public void registerUser(View v) {
 
 		task = REGISTER;
-		success = false;
 
 		String username = getUsername();
 		String password = getPassword();

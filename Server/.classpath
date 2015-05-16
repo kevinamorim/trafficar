@@ -20,6 +20,8 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jersey-server-1.17.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jersey-servlet-1.17.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/jsr311-api-1.1.1.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ormlite-core-4.48.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/ormlite-jdbc-4.48.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sqlite-jdbc-3.8.7.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
