@@ -6,6 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName="TrafficInformation")
 public class TrafficInformation {
 	
+	public static final String TABLE_NAME = "TrafficInformation";
 	public static final String DESCRIPTION_FIELD_NAME = "description";
 	public static final String USER_FIELD_NAME = "user";
 	
