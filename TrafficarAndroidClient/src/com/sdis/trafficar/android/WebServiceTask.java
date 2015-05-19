@@ -62,7 +62,6 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> implement
 	protected String doInBackground(String... urls) {
 		String url = urls[0];
 		String result = "";
-
 		HttpResponse response = doResponse(url);
 
 		if (response == null) {

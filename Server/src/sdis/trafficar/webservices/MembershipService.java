@@ -7,6 +7,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import sdis.trafficar.database.MyDatabaseTest;
+import sdis.trafficar.json.MyJSON;
 
 @Path("MembershipService")
 public class MembershipService {
@@ -20,12 +21,9 @@ public class MembershipService {
 		boolean success = db.registerUser(username, password);
 		db.close();
 		
-		if(success) {
-			return "{ \"success\" : \"true\", \"message\" : \" Register successfull.\" }";
-		} else {
-			return "{ \"success\" : \"false\", \"message\" : \" Username invalid, try another one.\" }";
-		}
-
+		String msg = success ?  "Register successfull." : " Username invalid, try another one.";
+		
+		return (new MyJSON(success, msg)).toString();
 	}
 	
 	@POST
@@ -37,11 +35,12 @@ public class MembershipService {
 		boolean success = db.loginUser(username, password);
 		db.close();
 		
-		if(success) {
-			return "{ \"success\" : \"true\", \"message\" : \" Welcome back! \", \"username\" : \"" + username + "\"}";
-		} else {
-			return "{ \"success\" : \"false\", \"message\" : \" Username or password invalid.\" }";
-		}
+		String msg = success ?  "Welcome back!" : " Username or password invalid.";
+		
+		MyJSON response = new MyJSON(success, msg);
+		response.put("username", username);
+		
+		return response.toString();
 	}
 	
 	@GET
@@ -49,7 +48,7 @@ public class MembershipService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Test() {
 		System.out.println("MembershipService/Test");
-		return "{ \"success\" :  \"true\", \"message\" : \" Connection established! \" }";
+		return (new MyJSON(true, "Connection established!")).toString();
 	}
 
 }

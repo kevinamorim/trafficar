@@ -40,6 +40,8 @@ public class HomeActivity extends Activity {
 		
 		EditText etDescription = (EditText) findViewById(R.id.et_description);
 		String description = etDescription.getText().toString();
+		
+		etDescription.setText("");
 	
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Sending traffic info...");
 		wst.addNameValuePair("username", username);
@@ -82,27 +84,30 @@ public class HomeActivity extends Activity {
 			
 			for(int i = 0; i < params.length(); i++) {
 				information.add(params.getString(i));
-			}
+			}		
 			
-			Log.d(TAG, "" + information.size());
-			Log.d(TAG, information.get(0));
-			
-			TableLayout tableLayout = (TableLayout) findViewById(R.id.tableLayout1);
-			
-			for(int i = 0; i < information.size(); i++) {
-				TableRow row = new TableRow(this);
-				TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-				row.setLayoutParams(lp);
-				TextView tv = new TextView(this);
-				tv.setText(information.get(i));
-				row.addView(tv);
-				tableLayout.addView(row);
-			}
+			updateTrafficInformation(information);
+
 			
 		} catch(Exception e) {
 			Log.e(TAG, e.getLocalizedMessage(), e);
 		}
 
+	}
+	
+	private void updateTrafficInformation(ArrayList<String> information) {
+		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
+		tableLayout.removeAllViews();
+		
+		for(int i = 0; i < information.size(); i++) {
+			TableRow row = new TableRow(this);
+			TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+			row.setLayoutParams(lp);
+			TextView tv = new TextView(this);
+			tv.setText(information.get(i));
+			row.addView(tv);
+			tableLayout.addView(row);
+		}
 	}
 	
 }

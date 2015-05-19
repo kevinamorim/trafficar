@@ -1,5 +1,6 @@
 package sdis.trafficar.webservices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.FormParam;
@@ -11,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import sdis.trafficar.database.MyDatabaseTest;
 import sdis.trafficar.database.TrafficInformation;
+import sdis.trafficar.json.MyJSON;
 
 @Path("TrafficInformationService")
 public class TrafficInformationService {
@@ -22,7 +24,7 @@ public class TrafficInformationService {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		db.addTrafficInformation(description, username);
 		db.close();
-		return "{ \"success\" : \"true\", \"message\" : \" Register successfull.\" }";
+		return (new MyJSON(true, "Register successfull.")).toString();
 	}
 	
 	@GET
@@ -32,19 +34,16 @@ public class TrafficInformationService {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		List<TrafficInformation> result = db.getTrafficInformation();
 		db.close();
-		String response = "{ \"success\" : \"true\", \"message\" : \" Register successfull.\"";
-		response += ",\"info\" : [ ";
 		
+		MyJSON response = new MyJSON(true, "Information gathered.");
+		
+		ArrayList<String> values = new ArrayList<String>();
 		for(int i = 0; i < result.size(); i++) {
-			if(i < (result.size() - 1))
-				response += "\"" + result.get(i).getDescription() + "\",";
-			else
-				response += "\"" + result.get(i).getDescription() + "\"";
+			values.add(result.get(i).getDescription());
 		}
 		
-		response += "] }";
-		
-		return response;
+		response.putArray("info", values);
+		return response.toString();
 		
 	}
 
