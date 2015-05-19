@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:id="@+id/tableLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,13 +20,11 @@
 
         <TextView
             android:id="@+id/tv_check"
-            android:textColor="#00CC00"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="" >
+            android:text=""
+            android:textColor="#00CC00" >
         </TextView>
-        
-        
     </TableRow>
 
     <TableRow
@@ -83,6 +82,22 @@
             android:layout_height="wrap_content"
             android:onClick="registerUser"
             android:text="@string/register" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="20dp" >
+        
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/bn_login_fb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            facebook:com_facebook_confirm_logout="false"
+            facebook:com_facebook_tooltip_mode="never_display" />
+      
     </TableRow>
 
     <TableRow

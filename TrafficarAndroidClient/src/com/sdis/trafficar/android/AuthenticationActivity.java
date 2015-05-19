@@ -3,8 +3,19 @@ package com.sdis.trafficar.android;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
 import org.json.JSONObject;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.sdis.trafficar.android.client.R;
 
 import android.app.Activity;
@@ -28,12 +39,66 @@ public class AuthenticationActivity extends Activity {
 	private static final int CHECK = 2;
 
 	private int task = -1;
-	
+
+	private CallbackManager callbackManager;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(R.layout.main);
+		
+		callbackManager = CallbackManager.Factory.create();
+		LoginButton loginFb = (LoginButton) findViewById(R.id.bn_login_fb);
+		loginFb.setReadPermissions(Arrays.asList("public_profile, email"));
+		
+		
+		LoginManager.getInstance().registerCallback(callbackManager,
+				new FacebookCallback<LoginResult>() {
+			@Override
+			public void onSuccess(LoginResult loginResult) {
+				GraphRequest.newMeRequest(
+						loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+							@Override
+							public void onCompleted(JSONObject me, GraphResponse response) {
+								if (response.getError() != null) {
+									// handle error
+								} else {
+									String email = me.optString("email");
+									String id = me.optString("id");
+									Log.e(TAG, "Email: " + email);
+									Log.e(TAG, "ID: " + id);
+								}
+							}
+						}).executeAsync();
+				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+				tvCheck.setText("LOL");
+			}
+
+			@Override
+			public void onCancel() {
+				Log.e(TAG, "CANCEL");
+				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+				tvCheck.setText("LOL");
+			}
+
+			@Override
+			public void onError(FacebookException exception) {
+				Log.e(TAG, "ERROR" + exception);
+				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+				tvCheck.setText("LOL");
+			}
+
+
+		});
 	}
+	
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
 
 	public void checkConnection(View v) {
 
@@ -45,7 +110,7 @@ public class AuthenticationActivity extends Activity {
 				((AuthenticationActivity) mContext).handleResponse(result);
 			}
 		};
-		
+
 		String url = SERVICE_URL + "/Test";
 		wst.execute(new String[] { url });
 	}
@@ -63,7 +128,7 @@ public class AuthenticationActivity extends Activity {
 				((AuthenticationActivity) mContext).handleResponse(result);
 			}
 		};
-		
+
 		wst.addNameValuePair("username", username);
 		wst.addNameValuePair("password", password);
 
@@ -86,7 +151,7 @@ public class AuthenticationActivity extends Activity {
 				((AuthenticationActivity) mContext).handleResponse(result);
 			}
 		};
-		
+
 		wst.addNameValuePair("username", username);
 		wst.addNameValuePair("password", password);
 
@@ -97,25 +162,25 @@ public class AuthenticationActivity extends Activity {
 	}
 
 	public void handleResponse(String response) {
-		
+
 		try {
 
 			JSONObject jso = new JSONObject(response);
-			
+
 			boolean success = jso.getBoolean("success");
 			String msg = jso.getString("message");
 
 			switch(task) {
 			case CHECK:
-				
+
 				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
 				tvCheck.setText(msg);
 				break;
 
 			case LOGIN:
-				
+
 				String username = jso.getString("username");
-				
+
 				if(success) {
 					Intent intent = new Intent(AuthenticationActivity.this, HomeActivity.class);
 					intent.putExtra("USERNAME", username);
@@ -129,10 +194,10 @@ public class AuthenticationActivity extends Activity {
 				break;
 
 			case REGISTER:
-				
+
 				TextView tvMessage = (TextView) findViewById(R.id.message);
 				tvMessage.setText(msg);
-				
+
 				break;
 
 			default:
