@@ -2,6 +2,9 @@ package sdis.trafficar.database;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
+
+import javax.security.auth.login.LoginException;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -14,8 +17,11 @@ import com.j256.ormlite.table.TableUtils;
 public class MyDatabaseTest {
 	
 	ConnectionSource connectionSource;
+	
 	Dao<User, String> userDao;
+	Dao<AuthToken, String> authTokenDao;
 	Dao<TrafficInformation, String> trafficInformationDao;
+	
 
 	public MyDatabaseTest(String name) {
 		
@@ -26,11 +32,14 @@ public class MyDatabaseTest {
 			userDao = DaoManager.createDao(connectionSource, User.class);
 			TableUtils.createTableIfNotExists(connectionSource, User.class);
 			
+			authTokenDao = DaoManager.createDao(connectionSource, AuthToken.class);
+			TableUtils.createTableIfNotExists(connectionSource, AuthToken.class);
+			
 			trafficInformationDao = DaoManager.createDao(connectionSource, TrafficInformation.class);
 			TableUtils.createTableIfNotExists(connectionSource, TrafficInformation.class);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Error creating database.");
 			e.printStackTrace();
 		} 
 	
@@ -41,7 +50,7 @@ public class MyDatabaseTest {
 		try {	
 			connectionSource.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Error closing database.");
 			e.printStackTrace();
 		}
 
@@ -56,6 +65,8 @@ public class MyDatabaseTest {
 				User user = new User();
 				user.setUsername(username);
 				user.setPassword(password);
+				user.setEmail("teste@teste.com");
+				user.setFacebookLogin(false);
 				userDao.create(user);
 				return true;
 			}
@@ -67,17 +78,40 @@ public class MyDatabaseTest {
 		return false;
 	}
 	
-	public boolean loginUser(String username, String password) {
+	public String loginUser(String username, String password) throws LoginException {
+		
 		QueryBuilder<User, String> queryBuilder = userDao.queryBuilder();
+		boolean loginValid = false;
+		User user = null;
+		
+		System.out.println("PW: " + password);
 		
 		try {
-			return queryBuilder.where().eq(User.USERNAME_FIELD_NAME, username).and().eq(User.PASSWORD_FIELD_NAME, password).countOf() == 1;
+			loginValid = queryBuilder.where().eq(User.USERNAME_FIELD_NAME, username).and().eq(User.PASSWORD_FIELD_NAME, password).countOf() == 1;
+			if(loginValid) {
+				user = userDao.queryForFirst(userDao.queryBuilder().where().eq(User.USERNAME_FIELD_NAME, username).prepare());
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			System.err.println("Error executing SQL query.");
 			e.printStackTrace();
 		}
 		
-		return false;
+		if(loginValid && user != null) {
+			String token = UUID.randomUUID().toString();
+			AuthToken authToken = new AuthToken();
+			authToken.setToken(token);
+			authToken.setUser(user);
+			
+			try {
+				authTokenDao.create(authToken);
+				return token;
+			} catch (SQLException e) {
+				System.err.println("Error inserting AuthToken.");
+				e.printStackTrace();
+			}
+		}
+		
+		throw new LoginException("Username or Password invalid.");
 		
 	}
 	

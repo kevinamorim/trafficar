@@ -64,8 +64,10 @@ public class AuthenticationActivity extends Activity {
 								if (response.getError() != null) {
 									// handle error
 								} else {
+									String username = me.optString("username");
 									String email = me.optString("email");
 									String id = me.optString("id");
+									Log.e(TAG, "User: " + username);
 									Log.e(TAG, "Email: " + email);
 									Log.e(TAG, "ID: " + id);
 								}

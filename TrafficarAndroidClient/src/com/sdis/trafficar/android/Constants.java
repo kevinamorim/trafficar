@@ -2,6 +2,6 @@ package com.sdis.trafficar.android;
 
 public class Constants {
 	
-	public static final String BASE_URL = "http://192.168.1.4:8080/TrafficarAPI/rest";
+	public static final String BASE_URL = "http://172.30.39.215:8080/TrafficarAPI/rest";
 
 }

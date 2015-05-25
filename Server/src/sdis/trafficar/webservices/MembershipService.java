@@ -1,4 +1,5 @@
 package sdis.trafficar.webservices;
+import javax.security.auth.login.LoginException;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -31,14 +32,27 @@ public class MembershipService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Login(@FormParam("username") String username, @FormParam("password") String password) {
 
+		String msg = "";
+		String token = "";
+		boolean success = false;
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
-		boolean success = db.loginUser(username, password);
+		
+		try {
+			
+			token = db.loginUser(username, password);
+			msg = "Welcome back!";
+			success = true;
+			
+		} catch(LoginException e) {
+			
+			msg = e.getMessage();
+			
+		}
+	
 		db.close();
 		
-		String msg = success ?  "Welcome back!" : " Username or password invalid.";
-		
 		MyJSON response = new MyJSON(success, msg);
-		response.put("username", username);
+		response.put("token", token);
 		
 		return response.toString();
 	}

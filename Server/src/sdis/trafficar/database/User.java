@@ -18,14 +18,14 @@ public class User {
 	@DatabaseField
 	private String password;
 	
+	@DatabaseField
+	private String email;
+	
+	@DatabaseField
+	private boolean facebookLogin;
+	
 	public User() {
 		
-	}
-	
-	public User(String username, String password) {
-		this.id = 0;
-		this.username = username;
-		this.password = password;
 	}
 	
 	public String getUsername() {
@@ -43,6 +43,24 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public boolean getFacebookLogin() {
+		return facebookLogin;
+	}
+	
+	public void setFacebookLogin(boolean facebookLogin) {
+		this.facebookLogin = facebookLogin;
+	}
+	
+	
 
 
 }
