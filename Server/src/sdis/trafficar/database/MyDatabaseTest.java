@@ -115,6 +115,19 @@ public class MyDatabaseTest {
 		
 	}
 	
+	public void logoutUser(String authToken) {
+		
+		AuthToken obj = null;
+		try {
+			obj = authTokenDao.queryForFirst(authTokenDao.queryBuilder().where().eq(AuthToken.TOKEN_FIELD_NAME, authToken).prepare());
+			authTokenDao.delete(obj);
+		} catch (SQLException e) {
+			System.err.println("Error deleting authorization token.");
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void addTrafficInformation(String description, String username) {
 		TrafficInformation tf = new TrafficInformation();
 		tf.setDescription(description);
@@ -152,4 +165,12 @@ public class MyDatabaseTest {
 		return null;
 	}
 
+	public boolean checkAuthToken(String authToken) {
+		try {
+			return (authTokenDao.queryBuilder().where().eq(AuthToken.TOKEN_FIELD_NAME, authToken).countOf() == 1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

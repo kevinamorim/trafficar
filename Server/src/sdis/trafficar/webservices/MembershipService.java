@@ -1,10 +1,13 @@
 package sdis.trafficar.webservices;
 import javax.security.auth.login.LoginException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import sdis.trafficar.database.MyDatabaseTest;
@@ -17,7 +20,6 @@ public class MembershipService {
 	@Path("/Register")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Register(@FormParam("username") String username, @FormParam("password") String password) {
-		
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		boolean success = db.registerUser(username, password);
 		db.close();
@@ -31,7 +33,6 @@ public class MembershipService {
 	@Path("/Login")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Login(@FormParam("username") String username, @FormParam("password") String password) {
-
 		String msg = "";
 		String token = "";
 		boolean success = false;

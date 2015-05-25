@@ -20,6 +20,7 @@ import com.sdis.trafficar.android.client.R;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class AuthenticationActivity extends Activity {
+	
+	private SharedPreferences settings;
 
 	private static final String SERVICE_URL = Constants.BASE_URL + "/MembershipService";
 	private static final String TAG = "AuthenticationActivity";
@@ -47,6 +50,8 @@ public class AuthenticationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(R.layout.main);
+		
+		setAddress();
 		
 		callbackManager = CallbackManager.Factory.create();
 		LoginButton loginFb = (LoginButton) findViewById(R.id.bn_login_fb);
@@ -93,6 +98,8 @@ public class AuthenticationActivity extends Activity {
 
 
 		});
+		
+		initSharedPrefs();
 	}
 	
     @Override
@@ -100,7 +107,6 @@ public class AuthenticationActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
-
 
 	public void checkConnection(View v) {
 
@@ -131,8 +137,8 @@ public class AuthenticationActivity extends Activity {
 			}
 		};
 
-		wst.addNameValuePair("username", username);
-		wst.addNameValuePair("password", password);
+		wst.addParam("username", username);
+		wst.addParam("password", password);
 
 		String url = SERVICE_URL + "/Login";
 
@@ -154,8 +160,8 @@ public class AuthenticationActivity extends Activity {
 			}
 		};
 
-		wst.addNameValuePair("username", username);
-		wst.addNameValuePair("password", password);
+		wst.addParam("username", username);
+		wst.addParam("password", password);
 
 		String url =  SERVICE_URL + "/Register";
 
@@ -181,17 +187,16 @@ public class AuthenticationActivity extends Activity {
 
 			case LOGIN:
 
-				String username = jso.getString("username");
+				String authToken = jso.getString("token");
 
 				if(success) {
+					saveAuthToken(authToken);
 					Intent intent = new Intent(AuthenticationActivity.this, HomeActivity.class);
-					intent.putExtra("USERNAME", username);
 					startActivity(intent);
 				} else {
 					TextView tvMessage = (TextView) findViewById(R.id.message);
 					tvMessage.setText(msg);
 				}
-
 
 				break;
 
@@ -251,5 +256,19 @@ public class AuthenticationActivity extends Activity {
 
 		return "";
 	}
+	
+	private void initSharedPrefs() {
+		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
+	}
 
+	private void saveAuthToken(String token) {
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("token", token);
+		editor.commit();
+	}
+	
+	private void setAddress() {
+		TextView tv = (TextView) findViewById(R.id.tv_address);
+		tv.setText(Constants.BASE_URL);
+	}
 }

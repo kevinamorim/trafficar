@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -39,7 +40,9 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> implement
 	protected Context mContext = null;
 	private String processMessage = "Processing...";
 
+	private ArrayList<NameValuePair> headers = new ArrayList<NameValuePair>();
 	private ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
+	
 	private ProgressDialog pDlg = null;
 
 	public WebServiceTask(int taskType, Context mContext, String processMessage) {
@@ -47,8 +50,12 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> implement
 		this.mContext = mContext;
 		this.processMessage = processMessage;
 	}
-
-	public void addNameValuePair(String name, String value) {
+	
+	public void addHeader(String name, String value) {
+		headers.add(new BasicNameValuePair(name, value));
+	}
+	
+	public void addParam(String name, String value) {
 		params.add(new BasicNameValuePair(name, value));
 	}
 
@@ -127,11 +134,23 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> implement
 			case POST_TASK:
 				HttpPost httppost = new HttpPost(url);
 				httppost.setEntity(new UrlEncodedFormEntity(params));
+				
+				// Set headers
+				for(int i = 0; i < headers.size(); i++) {
+					httppost.addHeader(headers.get(i).getName(), headers.get(i).getValue());
+				}
+				
 				response = httpclient.execute(httppost);
 				break;
 
 			case GET_TASK:
 				HttpGet httpget = new HttpGet(url);
+				
+				// Set headers
+				for(int i = 0; i < headers.size(); i++) {
+					httpget.addHeader(headers.get(i).getName(), headers.get(i).getValue());
+				}
+				
 				response = httpclient.execute(httpget);
 				break;
 

@@ -9,6 +9,7 @@ import com.sdis.trafficar.android.client.R;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,18 +23,20 @@ public class HomeActivity extends Activity {
 	private static final String SERVICE_URL = Constants.BASE_URL + "/TrafficInformationService";
 	private static final String TAG = "HomeActivity";
 	
-	private String username = "";
-
+	private SharedPreferences settings; 
+	
+	private String token;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home);
 		
-		Intent intent = getIntent();
-		username = intent.getStringExtra("USERNAME");
-		String text = "You are logged in as: " + username;
-		TextView tvUsername = (TextView) findViewById(R.id.tv_username);
-		tvUsername.setText(text);
+		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
+		token = settings.getString("token", "0");
+		
+//		Intent intent = getIntent();
+//		username = intent.getStringExtra("USERNAME");
 	}
 	
 	public void sendTrafficInformation(View v) {
@@ -44,10 +47,27 @@ public class HomeActivity extends Activity {
 		etDescription.setText("");
 	
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Sending traffic info...");
-		wst.addNameValuePair("username", username);
-		wst.addNameValuePair("description", description);
+		wst.addHeader("Authorization", token);
+		wst.addParam("description", description);
 		
 		String url = SERVICE_URL + "/Send";
+		wst.execute(new String[] { url });
+		
+	}
+	
+	public void logout(View v) {
+		
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "Getting new info..."){
+			@Override
+			public void onResponseReceived(String result) {
+				((HomeActivity) mContext).handleResponse(result);
+			}
+		};
+		
+		wst.addHeader("Authorization", token);
+		
+		String url = SERVICE_URL + "/Logout";
+		
 		wst.execute(new String[] { url });
 		
 	}
@@ -64,8 +84,7 @@ public class HomeActivity extends Activity {
 		String url = SERVICE_URL + "/GetInfo";
 		
 		wst.execute(new String[] { url });
-		
-		
+	
 	}
 	
 	public void handleResponse(String response) {
