@@ -9,6 +9,9 @@ public class AuthToken {
 	public static final String TOKEN_FIELD_NAME = "token";
 	public static final String USER_FIELD_NAME = "user";
 	
+	@DatabaseField(generatedId=true, allowGeneratedIdInsert=true)
+	private int id;
+	
 	@DatabaseField
 	private String token;
 	

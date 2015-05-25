@@ -61,7 +61,7 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> implement
 
 	@Override
 	protected void onPreExecute() {
-		hideKeyboard();
+		//hideKeyboard();
 		showProgressDialog();
 	}
 

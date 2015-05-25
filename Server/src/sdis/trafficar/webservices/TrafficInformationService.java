@@ -14,6 +14,7 @@ import javax.ws.rs.core.MediaType;
 import sdis.trafficar.database.MyDatabaseTest;
 import sdis.trafficar.database.TrafficInformation;
 import sdis.trafficar.json.MyJSON;
+import sdis.trafficar.utils.AuthenticationUtils;
 
 @Path("TrafficInformationService")
 public class TrafficInformationService {
@@ -25,13 +26,13 @@ public class TrafficInformationService {
 		
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		
-		if(authorize(db, authorization)) {
+		if(AuthenticationUtils.authorize(db, authorization)) {
 			db.addTrafficInformation(description, username);
 			db.close();
 			return (new MyJSON(true, "Register successfull.")).toString();
 		}
 		
-		return unauthorizedAccess();
+		return AuthenticationUtils.unauthorizedAccess();
 		
 	}
 	
@@ -41,7 +42,7 @@ public class TrafficInformationService {
 	public String GetInfo(@HeaderParam("Authorization") String authorization) {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		
-		if(authorize(db, authorization)) {
+		if(AuthenticationUtils.authorize(db, authorization)) {
 			List<TrafficInformation> result = db.getTrafficInformation();
 			db.close();
 			
@@ -56,7 +57,7 @@ public class TrafficInformationService {
 			return response.toString();
 		}
 		
-		return unauthorizedAccess();
+		return AuthenticationUtils.unauthorizedAccess();
 
 	}
 	
@@ -66,27 +67,15 @@ public class TrafficInformationService {
 	public String Logout(@HeaderParam("Authorization") String authorization) {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		
-		if(authorize(db, authorization)) {
+		if(AuthenticationUtils.authorize(db, authorization)) {
 			db.logoutUser(authorization);
 			return (new MyJSON(true, "Logout successfull.").toString());
 		}
 		
-		return unauthorizedAccess();
+		return AuthenticationUtils.unauthorizedAccess();
 	}
 	
 	
-	private String unauthorizedAccess() {
-		return (new MyJSON(false, "Unauthorized access!!!")).toString();
-	}
-	
-	private boolean authorize(MyDatabaseTest db, String authToken) {
-		boolean authorized = false;
-		
-		if(authToken != null) {
-			authorized = db.checkAuthToken(authToken);
-		}
-		
-		return authorized;
-	}
+
 
 }

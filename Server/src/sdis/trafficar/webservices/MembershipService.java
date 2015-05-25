@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import sdis.trafficar.database.MyDatabaseTest;
 import sdis.trafficar.json.MyJSON;
+import sdis.trafficar.utils.AuthenticationUtils;
 
 @Path("MembershipService")
 public class MembershipService {
@@ -56,6 +57,18 @@ public class MembershipService {
 		response.put("token", token);
 		
 		return response.toString();
+	}
+	
+	@GET
+	@Path("/CheckAuth")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String CheckAuth(@HeaderParam("Authorization") String authorization) {
+		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
+		boolean success = AuthenticationUtils.authorize(db, authorization);
+		
+		String msg = (success) ? "Authentication valid." : "Authentication failed.";
+		
+		return (new MyJSON(success, msg).toString());
 	}
 	
 	@GET

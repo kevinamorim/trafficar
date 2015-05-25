@@ -40,6 +40,7 @@ public class AuthenticationActivity extends Activity {
 	private static final int LOGIN = 0;
 	private static final int REGISTER = 1;
 	private static final int CHECK = 2;
+	private static final int AUTHENTICATE = 3;
 
 	private int task = -1;
 
@@ -50,56 +51,13 @@ public class AuthenticationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(R.layout.main);
-		
+
 		setAddress();
+		setFacebookLogin();
 		
-		callbackManager = CallbackManager.Factory.create();
-		LoginButton loginFb = (LoginButton) findViewById(R.id.bn_login_fb);
-		loginFb.setReadPermissions(Arrays.asList("public_profile, email"));
-		
-		
-		LoginManager.getInstance().registerCallback(callbackManager,
-				new FacebookCallback<LoginResult>() {
-			@Override
-			public void onSuccess(LoginResult loginResult) {
-				GraphRequest.newMeRequest(
-						loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-							@Override
-							public void onCompleted(JSONObject me, GraphResponse response) {
-								if (response.getError() != null) {
-									// handle error
-								} else {
-									String username = me.optString("username");
-									String email = me.optString("email");
-									String id = me.optString("id");
-									Log.e(TAG, "User: " + username);
-									Log.e(TAG, "Email: " + email);
-									Log.e(TAG, "ID: " + id);
-								}
-							}
-						}).executeAsync();
-				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
-				tvCheck.setText("LOL");
-			}
-
-			@Override
-			public void onCancel() {
-				Log.e(TAG, "CANCEL");
-				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
-				tvCheck.setText("LOL");
-			}
-
-			@Override
-			public void onError(FacebookException exception) {
-				Log.e(TAG, "ERROR" + exception);
-				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
-				tvCheck.setText("LOL");
-			}
-
-
-		});
-		
+		// Check if a login exists
 		initSharedPrefs();
+		checkForLogin();
 	}
 	
     @Override
@@ -177,6 +135,7 @@ public class AuthenticationActivity extends Activity {
 
 			boolean success = jso.getBoolean("success");
 			String msg = jso.getString("message");
+			System.out.println("msg: " + msg);
 
 			switch(task) {
 			case CHECK:
@@ -205,6 +164,19 @@ public class AuthenticationActivity extends Activity {
 				TextView tvMessage = (TextView) findViewById(R.id.message);
 				tvMessage.setText(msg);
 
+				break;
+				
+			case AUTHENTICATE:
+				Log.d(TAG, "ENTROU!!!!!");
+				if(success) {
+					Log.d(TAG, "SUCESSO!!!!!");
+					Intent intent = new Intent(AuthenticationActivity.this, HomeActivity.class);
+					startActivity(intent);
+				} else {
+					tvMessage = (TextView) findViewById(R.id.message);
+					tvMessage.setText(msg);
+				}
+				
 				break;
 
 			default:
@@ -270,5 +242,73 @@ public class AuthenticationActivity extends Activity {
 	private void setAddress() {
 		TextView tv = (TextView) findViewById(R.id.tv_address);
 		tv.setText(Constants.BASE_URL);
+	}
+	
+	private void setFacebookLogin() {
+		callbackManager = CallbackManager.Factory.create();
+		LoginButton loginFb = (LoginButton) findViewById(R.id.bn_login_fb);
+		loginFb.setReadPermissions(Arrays.asList("public_profile, email"));
+		
+		LoginManager.getInstance().registerCallback(callbackManager,
+				new FacebookCallback<LoginResult>() {
+			@Override
+			public void onSuccess(LoginResult loginResult) {
+				GraphRequest.newMeRequest(
+						loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+							@Override
+							public void onCompleted(JSONObject me, GraphResponse response) {
+								if (response.getError() != null) {
+									// handle error
+								} else {
+									String username = me.optString("username");
+									String email = me.optString("email");
+									String id = me.optString("id");
+									Log.e(TAG, "User: " + username);
+									Log.e(TAG, "Email: " + email);
+									Log.e(TAG, "ID: " + id);
+								}
+							}
+						}).executeAsync();
+				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+				tvCheck.setText("LOL");
+			}
+
+			@Override
+			public void onCancel() {
+				Log.e(TAG, "CANCEL");
+				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+				tvCheck.setText("LOL");
+			}
+
+			@Override
+			public void onError(FacebookException exception) {
+				Log.e(TAG, "ERROR" + exception);
+				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+				tvCheck.setText("LOL");
+			}
+
+
+		});
+		
+	}
+	
+	private void checkForLogin() {
+		String token = settings.getString("token", "0");
+		
+		Log.d(TAG, "TOKEN: " + token);
+		
+		task = AUTHENTICATE;
+		if(!token.equals("0")) {
+			WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "Posting data...") {
+				@Override
+				public void onResponseReceived(String result) {
+					((AuthenticationActivity) mContext).handleResponse(result);
+				}
+			};
+			wst.addHeader("Authorization", token);
+			String url =  SERVICE_URL + "/CheckAuth";
+
+			wst.execute(new String[] { url });
+		}
 	}
 }
