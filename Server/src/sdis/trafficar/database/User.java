@@ -6,8 +6,12 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName="User")
 public class User {
 	
+	public static final String ID_FIELD_NAME = "id";
 	public static final String USERNAME_FIELD_NAME = "username";
 	public static final String PASSWORD_FIELD_NAME = "password";
+	public static final String EMAIL_FIELD_NAME = "email";
+	public static final String NAME_FIELD_NAME = "name";
+	public static final String LOCATION_FIELD_NAME = "location";
 	
 	@DatabaseField(generatedId=true, allowGeneratedIdInsert=true)
 	private int id;
@@ -24,8 +28,14 @@ public class User {
 	@DatabaseField
 	private boolean facebookLogin;
 	
+	@DatabaseField
+	private String name;
+	
+	@DatabaseField
+	private String location;
+	
 	public User() {
-		
+		facebookLogin = false;
 	}
 	
 	public String getUsername() {
@@ -60,6 +70,21 @@ public class User {
 		this.facebookLogin = facebookLogin;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
+	}
 	
 
 

@@ -173,4 +173,30 @@ public class MyDatabaseTest {
 		}
 		return false;
 	}
+	
+	public User getUserById(int id) {
+		try {
+			return userDao.queryBuilder().where().eq(User.ID_FIELD_NAME, id).queryForFirst();
+		} catch(SQLException e) {
+			System.err.println("Error querying for User.");
+		}
+		return null;
+	}
+	
+	public void editUser(User user) {
+		try {
+			userDao.update(user);
+		} catch (SQLException e) {
+			System.err.println("Error updating user");
+		}
+	}
+	
+	public AuthToken getAuthTokenByToken(String authToken) {
+		try {
+			return authTokenDao.queryBuilder().where().eq(AuthToken.TOKEN_FIELD_NAME, authToken).queryForFirst();
+		} catch(SQLException e) {
+			System.err.println("Error querying for AuthToken.");
+		}
+		return null;
+	}
 }

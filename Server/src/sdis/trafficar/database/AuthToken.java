@@ -15,7 +15,7 @@ public class AuthToken {
 	@DatabaseField
 	private String token;
 	
-	@DatabaseField(canBeNull=false, foreign=true)
+	@DatabaseField(canBeNull=false, foreign=true, foreignAutoRefresh=true)
 	private User user;
 	
 	public AuthToken() { }

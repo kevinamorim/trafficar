@@ -14,6 +14,9 @@
     <string name="btnSearch">Search</string>
     <string name="btnProfile">Profile</string>
     <string name="btnLogout">Logout</string>
+    <string name="btnSave">Save Changes</string>
+    
+    <string name="unauthorizedAccess">YOU SHOULD NOT BE HERE. GO AWAY WHILE U CAN, BIATCH!</string>
     
     <!-- Facebook -->
     <string name="facebook_app_id">1626278184285593</string>

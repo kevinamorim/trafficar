@@ -135,7 +135,6 @@ public class AuthenticationActivity extends Activity {
 
 			boolean success = jso.getBoolean("success");
 			String msg = jso.getString("message");
-			System.out.println("msg: " + msg);
 
 			switch(task) {
 			case CHECK:
@@ -293,9 +292,7 @@ public class AuthenticationActivity extends Activity {
 	}
 	
 	private void checkForLogin() {
-		String token = settings.getString("token", "0");
-		
-		Log.d(TAG, "TOKEN: " + token);
+		String token = settings.getString("token", "0");	
 		
 		task = AUTHENTICATE;
 		if(!token.equals("0")) {

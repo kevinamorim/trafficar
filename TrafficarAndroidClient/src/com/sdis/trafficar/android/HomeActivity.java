@@ -87,6 +87,11 @@ public class HomeActivity extends Activity {
 	
 	}
 	
+	public void profile(View v) {
+		Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+		startActivity(intent);
+	}
+	
 	public void handleResponse(String response) {
 		
 		try {
@@ -113,6 +118,7 @@ public class HomeActivity extends Activity {
 		}
 
 	}
+	
 	
 	private void updateTrafficInformation(ArrayList<String> information) {
 		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
