@@ -7,10 +7,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/username" />
+
         <EditText
             android:id="@+id/et_username"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:inputType="text" />
     </TableRow>
 
@@ -18,10 +25,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/email" />
+
         <EditText
             android:id="@+id/et_email"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:inputType="textEmailAddress" />
     </TableRow>
 
@@ -29,10 +43,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/name" />
+
         <EditText
             android:id="@+id/et_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:inputType="text" />
     </TableRow>
 
@@ -40,10 +61,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/location" />
+
         <EditText
             android:id="@+id/et_location"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:inputType="text" />
     </TableRow>
 
@@ -58,8 +86,8 @@
             android:onClick="saveChanges"
             android:text="@string/btnSave" />
     </TableRow>
-    
-        <TableRow
+
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 

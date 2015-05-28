@@ -128,26 +128,27 @@ public class MyDatabaseTest {
 		
 	}
 	
-	public void addTrafficInformation(String description, String username) {
+	public void addTrafficInformation(String authToken, String description, String location, int intensity) {
 		TrafficInformation tf = new TrafficInformation();
 		tf.setDescription(description);
+		tf.setLocation(location);
+		tf.setIntensity(intensity);
+		
 		User user = null;
 		
-		try {
-			user = userDao.queryForFirst(userDao.queryBuilder().where().eq(User.USERNAME_FIELD_NAME, username).prepare());
-		} catch (SQLException e) {
-			System.out.println("NOT FOUND!");
-			e.printStackTrace();
-			return;
-		}
+		AuthToken authTokenObj = getAuthTokenByToken(authToken);
 		
-		tf.setUser(user);
-		
-		try {
-			trafficInformationDao.create(tf);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(authTokenObj != null) {
+			user = authTokenObj.getUser();
+			
+			tf.setUser(user);
+			
+			try {
+				trafficInformationDao.create(tf);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	

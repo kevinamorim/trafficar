@@ -22,14 +22,16 @@ public class TrafficInformationService {
 	@POST
 	@Path("/Send")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String Send(@HeaderParam("Authorization") String authorization, @FormParam("username") String username, @FormParam("description") String description) {
+	public String Send(@HeaderParam("Authorization") String authorization, 
+			@FormParam("description") String description, @FormParam("location") String location, @FormParam("intensity") String intensity) {
 		
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		
 		if(AuthenticationUtils.authorize(db, authorization)) {
-			db.addTrafficInformation(description, username);
+			int intensityInt = Integer.parseInt(intensity);
+			db.addTrafficInformation(authorization, description, location, intensityInt);
 			db.close();
-			return (new MyJSON(true, "Register successfull.")).toString();
+			return (new MyJSON(true, "Traffic information posted with success.")).toString();
 		}
 		
 		return AuthenticationUtils.unauthorizedAccess();

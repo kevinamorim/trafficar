@@ -1,8 +1,5 @@
 package com.sdis.trafficar.android;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import org.json.JSONObject;
@@ -33,9 +30,6 @@ public class AuthenticationActivity extends Activity {
 
 	private static final String SERVICE_URL = Constants.BASE_URL + "/MembershipService";
 	private static final String TAG = "AuthenticationActivity";
-
-	private static final String HASHING = "SHA-256";
-	private static final String CHARSET = "UTF-8";
 
 	private static final int LOGIN = 0;
 	private static final int REGISTER = 1;
@@ -197,37 +191,9 @@ public class AuthenticationActivity extends Activity {
 	private String getPassword() {
 		EditText editPassword = (EditText) findViewById(R.id.password);
 
-		String password = editPassword.getText().toString();
-
-		return hash(password);
+		return editPassword.getText().toString();
 	}
 
-	// Credits to: http://stackoverflow.com/questions/5531455/how-to-encode-some-string-with-sha256-in-java
-	private String hash(String base) {
-		try {
-			MessageDigest digest = MessageDigest.getInstance(HASHING);
-			byte[] hash = digest.digest(base.getBytes(CHARSET));
-			StringBuffer hexString = new StringBuffer();
-
-			for (int i = 0; i < hash.length; i++) {
-				String hex = Integer.toHexString(0xff & hash[i]);
-				if(hex.length() == 1) hexString.append('0');
-				hexString.append(hex);
-			}
-
-			return hexString.toString();
-
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return "";
-	}
-	
 	private void initSharedPrefs() {
 		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
 	}
@@ -268,22 +234,14 @@ public class AuthenticationActivity extends Activity {
 								}
 							}
 						}).executeAsync();
-				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
-				tvCheck.setText("LOL");
 			}
 
 			@Override
 			public void onCancel() {
-				Log.e(TAG, "CANCEL");
-				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
-				tvCheck.setText("LOL");
 			}
 
 			@Override
 			public void onError(FacebookException exception) {
-				Log.e(TAG, "ERROR" + exception);
-				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
-				tvCheck.setText("LOL");
 			}
 
 

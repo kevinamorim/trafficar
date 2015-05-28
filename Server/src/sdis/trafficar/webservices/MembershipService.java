@@ -1,13 +1,11 @@
 package sdis.trafficar.webservices;
 import javax.security.auth.login.LoginException;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import sdis.trafficar.database.MyDatabaseTest;
@@ -22,7 +20,7 @@ public class MembershipService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Register(@FormParam("username") String username, @FormParam("password") String password) {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
-		boolean success = db.registerUser(username, password);
+		boolean success = db.registerUser(username, AuthenticationUtils.hash(password));
 		db.close();
 		
 		String msg = success ?  "Register successfull." : " Username invalid, try another one.";
@@ -41,7 +39,7 @@ public class MembershipService {
 		
 		try {
 			
-			token = db.loginUser(username, password);
+			token = db.loginUser(username, AuthenticationUtils.hash(password));
 			msg = "Welcome back!";
 			success = true;
 			
@@ -65,6 +63,7 @@ public class MembershipService {
 	public String CheckAuth(@HeaderParam("Authorization") String authorization) {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		boolean success = AuthenticationUtils.authorize(db, authorization);
+		db.close();
 		
 		String msg = (success) ? "Authentication valid." : "Authentication failed.";
 		

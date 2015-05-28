@@ -68,13 +68,6 @@
             android:onClick="profile"
             android:text="@string/btnProfile" />
         
-        <Button
-            android:id="@+id/btn_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="logout"
-            android:text="@string/btnLogout" />
-        
     </TableLayout>
 
 </LinearLayout>

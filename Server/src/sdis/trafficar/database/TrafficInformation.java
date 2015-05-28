@@ -7,7 +7,10 @@ import com.j256.ormlite.table.DatabaseTable;
 public class TrafficInformation {
 	
 	public static final String TABLE_NAME = "TrafficInformation";
+	public static final String ID_FIELD_NAME = "id";
 	public static final String DESCRIPTION_FIELD_NAME = "description";
+	public static final String LOCATION_FIELD_NAME = "location";
+	public static final String INTENSITY_FIELD_NAME = "intensity";
 	public static final String USER_FIELD_NAME = "user";
 	
 	@DatabaseField(generatedId=true, allowGeneratedIdInsert=true)
@@ -16,7 +19,13 @@ public class TrafficInformation {
 	@DatabaseField
 	private String description;
 	
-	@DatabaseField(canBeNull=false, foreign=true)
+	@DatabaseField
+	private String location;
+	
+	@DatabaseField
+	private int intensity;
+	
+	@DatabaseField(canBeNull=false, foreign=true, foreignAutoRefresh=true)
 	private User user;
 	
 	public TrafficInformation() { }
@@ -27,6 +36,22 @@ public class TrafficInformation {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public String getLocation() {
+		return location;
+	}
+	
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
+	public int getIntensity() {
+		return intensity;
+	}
+	
+	public void setIntensity(int intensity) {
+		this.intensity = intensity;
 	}
 	
 	public User getUser() {

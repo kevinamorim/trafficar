@@ -4,8 +4,13 @@
     <string name="retrieve">TEST</string>
     <string name="username">Username:</string>
     <string name="password">Password:</string>
+    <string name="email">Email:</string>
+    <string name="name">Full name:</string>
+    <string name="location">Location:</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="description">Description:</string>
+    <string name="intensity">Intensity:</string>
     
     <string name="btnCheck">CHECK</string>
     <string name="btnSend">Send</string>
@@ -15,11 +20,21 @@
     <string name="btnProfile">Profile</string>
     <string name="btnLogout">Logout</string>
     <string name="btnSave">Save Changes</string>
+    <string name="btnPost">Post</string>
     
     <string name="unauthorizedAccess">YOU SHOULD NOT BE HERE. GO AWAY WHILE U CAN, BIATCH!</string>
     
     <!-- Facebook -->
     <string name="facebook_app_id">1626278184285593</string>
     <string name="facebook_app_name">Trafficar</string>
+    
+    
+    <string-array name="intensity_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 
 </resources>
