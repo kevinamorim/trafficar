@@ -21,6 +21,7 @@
     <string name="btnLogout">Logout</string>
     <string name="btnSave">Save Changes</string>
     <string name="btnPost">Post</string>
+    <string name="btnMyAccount">My Account</string>
     
     <string name="unauthorizedAccess">YOU SHOULD NOT BE HERE. GO AWAY WHILE U CAN, BIATCH!</string>
     

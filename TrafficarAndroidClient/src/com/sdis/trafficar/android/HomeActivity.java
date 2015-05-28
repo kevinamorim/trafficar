@@ -71,7 +71,7 @@ public class HomeActivity extends Activity {
 
 	}
 
-	public void refresh(View v) {
+	public void refresh() {
 		
 		task = UPDATE_TASK;
 
@@ -88,7 +88,7 @@ public class HomeActivity extends Activity {
 
 	}
 
-	public void profile(View v) {
+	public void profile() {
 		Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
 		startActivity(intent);
 	}
@@ -147,9 +147,20 @@ public class HomeActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case R.id.menu_refresh:
+			refresh();
+			break;
+		case R.id.menu_search:
+			break;
+		case R.id.menu_account:
+			profile();
+			break;
 		case R.id.menu_logout:
 			logout();
 			break;
+		default:
+			return super.onOptionsItemSelected(item);
+			
 		}
 
 		return true;
@@ -157,18 +168,18 @@ public class HomeActivity extends Activity {
 
 
 	private void updateTrafficInformation(ArrayList<String> information) {
-		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
-		tableLayout.removeAllViews();
-
-		for(int i = 0; i < information.size(); i++) {
-			TableRow row = new TableRow(this);
-			TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-			row.setLayoutParams(lp);
-			TextView tv = new TextView(this);
-			tv.setText(information.get(i));
-			row.addView(tv);
-			tableLayout.addView(row);
-		}
+//		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
+//		tableLayout.removeAllViews();
+//
+//		for(int i = 0; i < information.size(); i++) {
+//			TableRow row = new TableRow(this);
+//			TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+//			row.setLayoutParams(lp);
+//			TextView tv = new TextView(this);
+//			tv.setText(information.get(i));
+//			row.addView(tv);
+//			tableLayout.addView(row);
+//		}
 	}
 
 }
