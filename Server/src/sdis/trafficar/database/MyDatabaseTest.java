@@ -166,6 +166,19 @@ public class MyDatabaseTest {
 		return null;
 	}
 
+	public List<User> getAllUsers() {
+		
+		try {
+			List<User> result = userDao.queryForAll();
+			return result;
+		} catch (SQLException e) {
+			System.err.println("Error querying for users.");
+		}
+		
+		return null;
+
+	}
+	
 	public boolean checkAuthToken(String authToken) {
 		try {
 			return (authTokenDao.queryBuilder().where().eq(AuthToken.TOKEN_FIELD_NAME, authToken).countOf() == 1);

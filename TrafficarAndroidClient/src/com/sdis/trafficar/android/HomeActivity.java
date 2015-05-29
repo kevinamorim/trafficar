@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -42,9 +41,6 @@ public class HomeActivity extends Activity {
 
 		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
 		token = settings.getString("token", "0");
-
-		//		Intent intent = getIntent();
-		//		username = intent.getStringExtra("USERNAME");
 	}
 
 	public void sendTrafficInformation(View v) {
@@ -77,10 +73,12 @@ public class HomeActivity extends Activity {
 
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "Getting new info..."){
 			@Override
-			public void onResponseReceived(String result) {
-				((HomeActivity) mContext).handleResponse(result);
+			public void onResponseReceived(String response) {
+				((HomeActivity) mContext).handleResponse(response);
 			}
 		};
+		
+		wst.addHeader("Authorization", token);
 
 		String url = SERVICE_URL + "/GetInfo";
 
@@ -90,6 +88,11 @@ public class HomeActivity extends Activity {
 
 	public void profile() {
 		Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+		startActivity(intent);
+	}
+	
+	public void explore() {
+		Intent intent = new Intent(HomeActivity.this, ExploreActivity.class);
 		startActivity(intent);
 	}
 
@@ -136,6 +139,7 @@ public class HomeActivity extends Activity {
 		}
 
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,6 +155,7 @@ public class HomeActivity extends Activity {
 			refresh();
 			break;
 		case R.id.menu_search:
+			explore();
 			break;
 		case R.id.menu_account:
 			profile();
@@ -168,18 +173,18 @@ public class HomeActivity extends Activity {
 
 
 	private void updateTrafficInformation(ArrayList<String> information) {
-//		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
-//		tableLayout.removeAllViews();
-//
-//		for(int i = 0; i < information.size(); i++) {
-//			TableRow row = new TableRow(this);
-//			TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-//			row.setLayoutParams(lp);
-//			TextView tv = new TextView(this);
-//			tv.setText(information.get(i));
-//			row.addView(tv);
-//			tableLayout.addView(row);
-//		}
+		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
+		tableLayout.removeAllViews();
+
+		for(int i = 0; i < information.size(); i++) {
+			TableRow row = new TableRow(this);
+			TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+			row.setLayoutParams(lp);
+			TextView tv = new TextView(this);
+			tv.setText(information.get(i));
+			row.addView(tv);
+			tableLayout.addView(row);
+		}
 	}
 
 }
