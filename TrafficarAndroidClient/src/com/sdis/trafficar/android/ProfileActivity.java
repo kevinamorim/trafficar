@@ -69,7 +69,6 @@ public class ProfileActivity extends Activity {
 
 	}
 
-
 	public void handleResponse(String response) {
 
 		try {
@@ -153,7 +152,6 @@ public class ProfileActivity extends Activity {
 	private void setUnauthorized() {
 		setContentView(R.layout.unauthorized);
 	}
-
 
 	private void getAuthentication() {
 		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);

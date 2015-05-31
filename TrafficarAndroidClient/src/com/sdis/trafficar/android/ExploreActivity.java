@@ -8,10 +8,13 @@ import org.json.JSONObject;
 
 import com.sdis.trafficar.helpers.*;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 
 public class ExploreActivity extends ListActivity {
 
@@ -19,6 +22,7 @@ public class ExploreActivity extends ListActivity {
 	private static final String TAG = "ExploreActivity";
 
 	private static final int GET_USERS_TASK = 0;
+	private static final int FOLLOW_USER_TASK = 1;
 
 	private SharedPreferences settings; 
 
@@ -32,6 +36,13 @@ public class ExploreActivity extends ListActivity {
 		token = settings.getString("token", "0");
 		getUsers();
 	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		UserItemAdapter item = (UserItemAdapter) getListAdapter().getItem(position);
+		follow(item.getId());
+	}
+
 
 	protected void handleResponse(String response) {
 
@@ -67,6 +78,20 @@ public class ExploreActivity extends ListActivity {
 				}
 
 				break;
+				
+			case FOLLOW_USER_TASK:
+				
+				if(success) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setMessage("FOLLOWING!").setTitle("Follow User");
+					AlertDialog dialog = builder.create();
+					dialog.show();
+				} else {
+					
+				}
+				
+				break;
+				
 			default:
 				break;
 			}
@@ -107,8 +132,24 @@ public class ExploreActivity extends ListActivity {
 		UserArrayAdapter adapter = new UserArrayAdapter(this, items);
 		setListAdapter(adapter);
 	}
-
-
-
-
+	
+	private void follow(int id) {
+		
+		task = FOLLOW_USER_TASK;
+		
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Following user...") {
+			@Override
+			public void onResponseReceived(String response) {
+				((ExploreActivity) mContext).handleResponse(response);
+			}
+		};
+		
+		wst.addHeader("Authorization", token);
+		wst.addParam("id", "" + id);
+		
+		String url = SERVICE_URL + "/FollowUser";
+		wst.execute(new String[] { url });
+		
+	}
+	
 }

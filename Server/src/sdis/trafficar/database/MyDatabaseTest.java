@@ -8,7 +8,6 @@ import javax.security.auth.login.LoginException;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
@@ -20,6 +19,7 @@ public class MyDatabaseTest {
 	
 	Dao<User, String> userDao;
 	Dao<AuthToken, String> authTokenDao;
+	Dao<UsersFollow, String> usersFollowDao;
 	Dao<TrafficInformation, String> trafficInformationDao;
 	
 
@@ -35,12 +35,14 @@ public class MyDatabaseTest {
 			authTokenDao = DaoManager.createDao(connectionSource, AuthToken.class);
 			TableUtils.createTableIfNotExists(connectionSource, AuthToken.class);
 			
+			usersFollowDao = DaoManager.createDao(connectionSource, UsersFollow.class);
+			TableUtils.createTableIfNotExists(connectionSource, UsersFollow.class);
+			
 			trafficInformationDao = DaoManager.createDao(connectionSource, TrafficInformation.class);
 			TableUtils.createTableIfNotExists(connectionSource, TrafficInformation.class);
 
 		} catch (SQLException e) {
 			System.err.println("Error creating database.");
-			e.printStackTrace();
 		} 
 	
 	}
@@ -51,7 +53,6 @@ public class MyDatabaseTest {
 			connectionSource.close();
 		} catch (SQLException e) {
 			System.err.println("Error closing database.");
-			e.printStackTrace();
 		}
 
 	}
@@ -212,5 +213,13 @@ public class MyDatabaseTest {
 			System.err.println("Error querying for AuthToken.");
 		}
 		return null;
+	}
+	
+	public void addUserFollow(UsersFollow userFollow) {
+		try {
+			usersFollowDao.create(userFollow);
+		} catch (SQLException e) {
+			System.err.println("Error inserting UsersFollow");
+		}
 	}
 }

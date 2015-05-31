@@ -3,14 +3,18 @@ package sdis.trafficar.webservices;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import sdis.trafficar.database.AuthToken;
 import sdis.trafficar.database.MyDatabaseTest;
 import sdis.trafficar.database.User;
+import sdis.trafficar.database.UsersFollow;
 import sdis.trafficar.json.MyJSON;
 import sdis.trafficar.utils.AuthenticationUtils;
 
@@ -46,6 +50,35 @@ public class UserService {
 			System.out.println(response.toString());
 			
 			return response.toString();
+		}
+		
+		return AuthenticationUtils.unauthorizedAccess();
+	}
+	
+	@POST
+	@Path("/FollowUser")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String FollowUser(@HeaderParam("Authorization") String authToken, @FormParam("id") int id) {
+		
+		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
+		
+		if(AuthenticationUtils.authorize(db, authToken)) {
+			
+			AuthToken token = db.getAuthTokenByToken(authToken);
+			User source = token.getUser();
+			User target = db.getUserById(id);
+
+			if(source != null && target != null) {
+				UsersFollow userFollow = new UsersFollow();
+				userFollow.setSource(source);
+				userFollow.setTarget(target);
+				db.addUserFollow(userFollow);
+				
+				return (new MyJSON(true, "User followed with success.").toString());
+			}
+			
+			return (new MyJSON(false, "Could not follow user.").toString());
+			
 		}
 		
 		return AuthenticationUtils.unauthorizedAccess();

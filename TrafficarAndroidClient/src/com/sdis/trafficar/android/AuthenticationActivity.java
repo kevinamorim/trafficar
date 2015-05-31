@@ -18,6 +18,7 @@ import com.sdis.trafficar.android.client.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +26,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class AuthenticationActivity extends Activity {
-	
+
 	private SharedPreferences settings;
 
 	private static final String SERVICE_URL = Constants.BASE_URL + "/MembershipService";
@@ -48,17 +49,17 @@ public class AuthenticationActivity extends Activity {
 
 		setAddress();
 		setFacebookLogin();
-		
+
 		// Check if a login exists
 		initSharedPrefs();
 		checkForLogin();
 	}
-	
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		callbackManager.onActivityResult(requestCode, resultCode, data);
+	}
 
 	public void checkConnection(View v) {
 
@@ -77,47 +78,52 @@ public class AuthenticationActivity extends Activity {
 
 	public void loginUser(View v) {
 
-		task = LOGIN;
+		if(validateForm()) {
+			task = LOGIN;
 
-		String username = getUsername();
-		String password = getPassword();
+			String username = getUsername();
+			String password = getPassword();
 
-		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...") {
-			@Override
-			public void onResponseReceived(String result) {
-				((AuthenticationActivity) mContext).handleResponse(result);
-			}
-		};
+			WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...") {
+				@Override
+				public void onResponseReceived(String result) {
+					((AuthenticationActivity) mContext).handleResponse(result);
+				}
+			};
 
-		wst.addParam("username", username);
-		wst.addParam("password", password);
+			wst.addParam("username", username);
+			wst.addParam("password", password);
 
-		String url = SERVICE_URL + "/Login";
+			String url = SERVICE_URL + "/Login";
 
-		wst.execute(new String[] { url });
+			wst.execute(new String[] { url });
+		}
 
 	}
 
 	public void registerUser(View v) {
 
-		task = REGISTER;
+		if(validateForm()) {
 
-		String username = getUsername();
-		String password = getPassword();
+			task = REGISTER;
 
-		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...") {
-			@Override
-			public void onResponseReceived(String result) {
-				((AuthenticationActivity) mContext).handleResponse(result);
-			}
-		};
+			String username = getUsername();
+			String password = getPassword();
 
-		wst.addParam("username", username);
-		wst.addParam("password", password);
+			WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...") {
+				@Override
+				public void onResponseReceived(String result) {
+					((AuthenticationActivity) mContext).handleResponse(result);
+				}
+			};
 
-		String url =  SERVICE_URL + "/Register";
+			wst.addParam("username", username);
+			wst.addParam("password", password);
 
-		wst.execute(new String[] { url });
+			String url =  SERVICE_URL + "/Register";
+
+			wst.execute(new String[] { url });
+		}
 
 	}
 
@@ -158,7 +164,7 @@ public class AuthenticationActivity extends Activity {
 				tvMessage.setText(msg);
 
 				break;
-				
+
 			case AUTHENTICATE:
 				Log.d(TAG, "ENTROU!!!!!");
 				if(success) {
@@ -169,7 +175,7 @@ public class AuthenticationActivity extends Activity {
 					tvMessage = (TextView) findViewById(R.id.message);
 					tvMessage.setText(msg);
 				}
-				
+
 				break;
 
 			default:
@@ -203,17 +209,17 @@ public class AuthenticationActivity extends Activity {
 		editor.putString("token", token);
 		editor.commit();
 	}
-	
+
 	private void setAddress() {
 		TextView tv = (TextView) findViewById(R.id.tv_address);
 		tv.setText(Constants.BASE_URL);
 	}
-	
+
 	private void setFacebookLogin() {
 		callbackManager = CallbackManager.Factory.create();
 		LoginButton loginFb = (LoginButton) findViewById(R.id.bn_login_fb);
 		loginFb.setReadPermissions(Arrays.asList("public_profile, email"));
-		
+
 		LoginManager.getInstance().registerCallback(callbackManager,
 				new FacebookCallback<LoginResult>() {
 			@Override
@@ -246,12 +252,12 @@ public class AuthenticationActivity extends Activity {
 
 
 		});
-		
+
 	}
-	
+
 	private void checkForLogin() {
 		String token = settings.getString("token", "0");	
-		
+
 		task = AUTHENTICATE;
 		if(!token.equals("0")) {
 			WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "Posting data...") {
@@ -265,5 +271,26 @@ public class AuthenticationActivity extends Activity {
 
 			wst.execute(new String[] { url });
 		}
+	}
+
+	private boolean validateForm() {
+
+		boolean valid = true;
+
+		EditText etUsername = (EditText) findViewById(R.id.username);
+		EditText etPassword = (EditText) findViewById(R.id.password);
+
+		if(etUsername.getText().toString().length() == 0) {
+			valid = false;
+			etUsername.setError("Please, enter your username.");
+		}
+
+		if(etPassword.getText().toString().length() == 0) {
+			valid = false;
+			etPassword.setError("Please, enter your password.");
+		}
+
+		return valid;
+
 	}
 }

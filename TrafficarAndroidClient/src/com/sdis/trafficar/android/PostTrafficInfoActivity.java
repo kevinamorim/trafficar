@@ -1,8 +1,5 @@
 package com.sdis.trafficar.android;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sdis.trafficar.android.client.R;
@@ -99,6 +96,13 @@ public class PostTrafficInfoActivity extends Activity {
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.intensity_array, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(PostTrafficInfoActivity.this, HomeActivity.class);
+		finish();
+		startActivity(intent);
 	}
 
 }

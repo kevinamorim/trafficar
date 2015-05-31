@@ -171,7 +171,6 @@ public class HomeActivity extends Activity {
 		return true;
 	}
 
-
 	private void updateTrafficInformation(ArrayList<String> information) {
 		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
 		tableLayout.removeAllViews();

@@ -2,8 +2,8 @@
 
     <string name="app_name">TRAFFICAR</string>
     <string name="retrieve">TEST</string>
-    <string name="username">Username:</string>
-    <string name="password">Password:</string>
+    <string name="username">Enter username</string>
+    <string name="password">Enter password</string>
     <string name="email">Email:</string>
     <string name="name">Full name:</string>
     <string name="location">Location:</string>
@@ -22,6 +22,7 @@
     <string name="btnSave">Save Changes</string>
     <string name="btnPost">Post</string>
     <string name="btnMyAccount">My Account</string>
+    <string name="btnFollowing">Who Am I Following?</string>
     
     <string name="unauthorizedAccess">YOU SHOULD NOT BE HERE. GO AWAY WHILE U CAN, BIATCH!</string>
     
