@@ -55,7 +55,7 @@ public class TrafficInformationService {
 				values.add(result.get(i).getDescription());
 			}
 			
-			response.putArray("info", values);
+			response.putArray("info", values, false);
 			return response.toString();
 		}
 		

@@ -32,8 +32,8 @@ public class ExploreActivity extends ListActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
-		token = settings.getString("token", "0");
+		settings = this.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+		token = settings.getString(Constants.TOKEN_SETTINGS_NAME, Constants.TOKEN_DEF_VALUE);
 		getUsers();
 	}
 	

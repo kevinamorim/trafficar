@@ -25,8 +25,8 @@ public class MyJSON {
 		values.add(value);
 	}
 	
-	public void putArray(String key, ArrayList<String> values) {
-		MyJSONArray array = new MyJSONArray(key, values);
+	public void putArray(String key, ArrayList<String> values, boolean isObject) {
+		MyJSONArray array = new MyJSONArray(key, values, isObject);
 		arrays.add(array);
 	}
 	

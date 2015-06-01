@@ -1,6 +1,7 @@
 package com.sdis.trafficar.helpers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.sdis.trafficar.android.client.R;
 
@@ -14,9 +15,9 @@ import android.widget.TextView;
 public class UserArrayAdapter extends ArrayAdapter<UserItemAdapter> {
 	
 	private final Context context;
-	private ArrayList<UserItemAdapter> users;
+	private List<UserItemAdapter> users;
 
-	public UserArrayAdapter(Context context, ArrayList<UserItemAdapter> items) {
+	public UserArrayAdapter(Context context, List<UserItemAdapter> items) {
 		super(context, R.layout.user_list, items);
 		this.context = context;
 		

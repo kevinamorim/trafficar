@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -30,6 +31,7 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> implement
 	
 	public static final int GET_TASK = 1;
 	public static final int POST_TASK = 2;
+	public static final int DELETE_TASK = 3;
 
 	private static final String TAG = "WebServiceTask";
 

@@ -21,6 +21,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -292,5 +295,31 @@ public class AuthenticationActivity extends Activity {
 
 		return valid;
 
+	}
+	
+	private void settings() {
+		Intent intent = new Intent(AuthenticationActivity.this, SettingsActivity.class);
+		startActivity(intent);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.layout.authentication_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.menu_settings:
+			settings();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+			
+		}
+
+		return true;
 	}
 }

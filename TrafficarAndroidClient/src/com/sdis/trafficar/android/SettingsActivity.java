@@ -1,0 +1,16 @@
+package com.sdis.trafficar.android;
+
+import com.sdis.trafficar.android.client.R;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+public class SettingsActivity extends Activity {
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.settings);
+	}
+
+}

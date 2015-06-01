@@ -43,9 +43,9 @@ public class UserService {
 				locations.add(users.get(i).getLocation());
 			}
 
-			response.putArray("ids", ids);
-			response.putArray("usernames", usernames);
-			response.putArray("locations", locations);
+			response.putArray("ids", ids, false);
+			response.putArray("usernames", usernames, false);
+			response.putArray("locations", locations, false);
 
 			System.out.println(response.toString());
 
@@ -87,7 +87,7 @@ public class UserService {
 	@GET
 	@Path("/Following")
 	@Produces(MediaType.APPLICATION_JSON) 
-	public String following(@HeaderParam("Authorization") String authToken) {
+	public String Following(@HeaderParam("Authorization") String authToken) {
 
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 
@@ -107,8 +107,7 @@ public class UserService {
 				usersJson.add(users.get(i).toString());
 			}
 			
-			response.putArray("users", usersJson);
-
+			response.putArray("users", usersJson, true);
 
 			System.out.println("Response: " + response.toString());
 			return response.toString();
@@ -116,5 +115,28 @@ public class UserService {
 
 		return AuthenticationUtils.unauthorizedAccess();
 	}
-
+	
+	
+	@POST
+	@Path("/Unfollow")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String Unfollow(@HeaderParam("Authorization") String authToken, @FormParam("id") int id) {
+		
+		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
+		
+		if(AuthenticationUtils.authorize(db, authToken)) {
+			
+			AuthToken token = db.getAuthTokenByToken(authToken);
+			User source = token.getUser();
+			
+			db.unfollowUser(source.getId(), id);
+			db.close();
+			
+			return (new MyJSON(true, "User unfollowed with success.")).toString();
+			
+		}
+		
+		return AuthenticationUtils.unauthorizedAccess();
+	}
+ 
 }

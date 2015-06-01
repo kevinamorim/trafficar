@@ -140,7 +140,6 @@ public class HomeActivity extends Activity {
 
 	}
 	
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();

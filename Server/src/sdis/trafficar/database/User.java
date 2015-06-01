@@ -35,6 +35,11 @@ public class User {
 	private String location;
 	
 	public User() {
+		this.username = "";
+		this.password = "";
+		this.email = "";
+		this.name = "";
+		this.location = "";
 		facebookLogin = false;
 	}
 	

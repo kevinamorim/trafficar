@@ -10,6 +10,7 @@ import javax.security.auth.login.LoginException;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -243,5 +244,15 @@ public class MyDatabaseTest {
 		return following;
 	}
 	
-	
+	public void unfollowUser(int sourceId, int targetId) {
+		
+		DeleteBuilder<UsersFollow, String> builder = usersFollowDao.deleteBuilder();
+		try {
+			builder.where().eq("sourceUser_id", sourceId).and().eq("targetUser_id", targetId);
+			usersFollowDao.delete(builder.prepare());
+		} catch (SQLException e) {
+			System.err.println("Error deleting user follow.");
+		}
+
+	}
 }

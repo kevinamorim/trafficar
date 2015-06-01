@@ -6,10 +6,12 @@ public class MyJSONArray {
 	
 	private String key;
 	private ArrayList<String> values;
+	private boolean isObject;
 	
-	public MyJSONArray(String key, ArrayList<String> values) {
+	public MyJSONArray(String key, ArrayList<String> values, boolean isObject) {
 		this.key = key;
 		this.values = values;
+		this.isObject = isObject;
 	}
 	
 	public void put(String value) {
@@ -21,9 +23,15 @@ public class MyJSONArray {
 		
 		for(int i = 0; i < values.size(); i++) {
 			if(i < (values.size() - 1)) 
-				result += "\"" + values.get(i) + "\", ";
+				if(isObject) 
+					result += values.get(i) + ", ";
+				else
+					result += "\"" + values.get(i) + "\", ";
 			else 
-				result += "\"" + values.get(i) + "\" ";
+				if(isObject)
+					result += values.get(i);
+				else	
+					result += "\"" + values.get(i) + "\" ";
 		}
 		
 		result += "]";

@@ -71,19 +71,8 @@ public class ProfileActivity extends Activity {
 	}
 
 	public void following(View v) {
-
-		task = GET_FOLLOWING;
-
-		WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "Getting users that you are following...") {
-			@Override
-			public void onResponseReceived(String response) {
-				((ProfileActivity) mContext).handleResponse(response);
-			}
-		};
-
-		wst.addHeader("Authorization", authToken);
-		String url = Constants.BASE_URL + "/UserService" + "/Following";
-		wst.execute(new String[] { url });
+		Intent intent = new Intent(ProfileActivity.this, FollowingActivity.class);
+		startActivity(intent);
 	}
 
 	public void handleResponse(String response) {

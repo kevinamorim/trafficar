@@ -12,17 +12,26 @@
     <string name="description">Description:</string>
     <string name="intensity">Intensity:</string>
     
+    <string name="confirm_unfollow">Unfollow user?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <string name="btnCheck">CHECK</string>
     <string name="btnSend">Send</string>
     <string name="btnRefresh">Refresh</string>
     <string name="btnUsers">Users</string>
-    <string name="btnSearch">Search</string>
+    <string name="btnSearch">Explore</string>
     <string name="btnProfile">Profile</string>
     <string name="btnLogout">Logout</string>
     <string name="btnSave">Save Changes</string>
     <string name="btnPost">Post</string>
     <string name="btnMyAccount">My Account</string>
     <string name="btnFollowing">Who Am I Following?</string>
+    <string name="btnSettings">Settings</string>
+    
+    <string name="ip_config_hint">Server IP Address&#8230;</string>
+    <string name="port_config_hint">Server Port Number&#8230;</string>
+    
     
     <string name="unauthorizedAccess">YOU SHOULD NOT BE HERE. GO AWAY WHILE U CAN, BIATCH!</string>
     
