@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import com.sdis.trafficar.android.client.R;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ public class PostTrafficInfoActivity extends Activity {
 	
 	private static final String SERVICE_URL = Constants.BASE_URL + "/TrafficInformationService";
 	private static final String TAG = "PostTrafficInfoActivity";
+	
+	private static final int POST_INFO = 0;
 	
 	private SharedPreferences settings; 
 	
@@ -38,6 +41,8 @@ public class PostTrafficInfoActivity extends Activity {
 	}
 	
 	public void post(View v) {
+		
+		task = POST_INFO;
 		
 		EditText etDescription = (EditText) findViewById(R.id.et_description);
 		EditText etLocation = (EditText) findViewById(R.id.et_location);
@@ -79,8 +84,11 @@ public class PostTrafficInfoActivity extends Activity {
 				Intent intent = new Intent(PostTrafficInfoActivity.this, HomeActivity.class);
 				startActivity(intent);
 			} else {
-				TextView tvMessage = (TextView) findViewById(R.id.tv_message);
-				tvMessage.setText(msg);
+				
+				AlertDialog.Builder builder = new AlertDialog.Builder(this).setMessage(msg);
+				AlertDialog dialog = builder.create();
+				dialog.show();
+				
 			}
 
 			

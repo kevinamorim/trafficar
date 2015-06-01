@@ -1,6 +1,14 @@
 <resources>
+    
+    <!--  Activity Titles -->
+    <string name="app_name">Trafficar</string>
+    <string name="explore_activity">Explore</string>
+    <string name="following_activity">Following</string>
+    <string name="post_activity">Post Traffic Info</string>
+    <string name="profile_activity">My Account</string>
+    <string name="settings_activity">Settings</string>
 
-    <string name="app_name">TRAFFICAR</string>
+    
     <string name="retrieve">TEST</string>
     <string name="username">Enter username</string>
     <string name="password">Enter password</string>
@@ -13,8 +21,9 @@
     <string name="intensity">Intensity:</string>
     
     <string name="confirm_unfollow">Unfollow user?</string>
+    <string name="information_posted">Information posted with success.</string>
     <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="no">Cancel</string>
 
     <string name="btnCheck">CHECK</string>
     <string name="btnSend">Send</string>
