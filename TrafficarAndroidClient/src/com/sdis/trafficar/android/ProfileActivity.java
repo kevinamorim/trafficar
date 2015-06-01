@@ -20,13 +20,14 @@ public class ProfileActivity extends Activity {
 
 	private static final String SERVICE_URL = Constants.BASE_URL + "/ProfileService";
 	private static final String TAG = "ProfileActivity";
-	
+
 	private static final int GET_PROFILE = 0;
 	private static final int UPDATE_PROFILE = 1;
-	
+	private static final int GET_FOLLOWING = 2;
+
 	private String authToken;
 	private int task = -1;
-	
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class ProfileActivity extends Activity {
 	}
 
 	public void saveChanges(View v) {
-		
+
 		task = UPDATE_PROFILE;
 
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Updating user information...") {
@@ -69,6 +70,22 @@ public class ProfileActivity extends Activity {
 
 	}
 
+	public void following(View v) {
+
+		task = GET_FOLLOWING;
+
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "Getting users that you are following...") {
+			@Override
+			public void onResponseReceived(String response) {
+				((ProfileActivity) mContext).handleResponse(response);
+			}
+		};
+
+		wst.addHeader("Authorization", authToken);
+		String url = Constants.BASE_URL + "/UserService" + "/Following";
+		wst.execute(new String[] { url });
+	}
+
 	public void handleResponse(String response) {
 
 		try {
@@ -76,10 +93,10 @@ public class ProfileActivity extends Activity {
 
 			boolean success = jso.getBoolean("success");
 			String msg = jso.getString("message");
-			
+
 			switch(task) {
 			case GET_PROFILE:
-				
+
 				if(success) {
 
 					String username = jso.getString("username");
@@ -95,11 +112,11 @@ public class ProfileActivity extends Activity {
 
 				}
 
-				
+
 				break;
-				
+
 			case UPDATE_PROFILE:
-				
+
 				if(success) {
 					Intent intent = new Intent(ProfileActivity.this, HomeActivity.class);
 					startActivity(intent);
@@ -107,12 +124,17 @@ public class ProfileActivity extends Activity {
 					TextView tvMessage = (TextView) findViewById(R.id.tv_message); 
 					tvMessage.setText(msg);
 				}
-				
+
 				break;
 				
-				default:
-					break;
+			case GET_FOLLOWING: 
+				break;
+
+			default:
+				break;
 			}
+
+
 
 
 
@@ -122,7 +144,7 @@ public class ProfileActivity extends Activity {
 	}
 
 	private void getUserInfo() {
-		
+
 		task = GET_PROFILE;
 
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.GET_TASK, this, "Getting user information...") {

@@ -24,7 +24,7 @@ public class UserArrayAdapter extends ArrayAdapter<UserItemAdapter> {
 	}
 	
 	public void addUser(int id, String username, String location) {
-		UserItemAdapter obj = new UserItemAdapter(id, username, location);
+		UserItemAdapter obj = new UserItemAdapter(id, username, location, false);
 		users.add(obj);
 	}
 	
@@ -35,7 +35,7 @@ public class UserArrayAdapter extends ArrayAdapter<UserItemAdapter> {
 		TextView tvUsername = (TextView) rowView.findViewById(R.id.tvUsername);
 		TextView tvLocation = (TextView) rowView.findViewById(R.id.tvLocation);
 		tvUsername.setText(users.get(position).getUsername());
-		tvLocation.setText(users.get(position).getLocation());
+		tvLocation.setText("(" + users.get(position).getLocation() + ")");
 		return rowView;
 	}
 

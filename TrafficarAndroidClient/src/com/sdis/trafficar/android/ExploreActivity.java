@@ -125,7 +125,7 @@ public class ExploreActivity extends ListActivity {
 	private void updateUsersList(ArrayList<Integer> ids, ArrayList<String> usernames, ArrayList<String> locations) {
 		ArrayList<UserItemAdapter> items = new ArrayList<UserItemAdapter>();
 		for(int i = 0; i < ids.size(); i++) {
-			UserItemAdapter item = new UserItemAdapter(ids.get(i), usernames.get(i), locations.get(i));
+			UserItemAdapter item = new UserItemAdapter(ids.get(i), usernames.get(i), locations.get(i), false);
 			items.add(item);
 		}
 		

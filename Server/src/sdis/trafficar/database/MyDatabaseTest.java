@@ -1,6 +1,7 @@
 package sdis.trafficar.database;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -222,4 +223,25 @@ public class MyDatabaseTest {
 			System.err.println("Error inserting UsersFollow");
 		}
 	}
+	
+	public List<User> getUsersFollowing(int sourceId) {
+		
+		User user = getUserById(sourceId);
+		List<User> following = null;
+		try {
+			List<UsersFollow> usersFollow = usersFollowDao.queryBuilder().where().eq("sourceUser_id", user.getId()).query();
+			following = new ArrayList<User>();
+			
+			for(int i = 0; i < usersFollow.size(); i++) {
+				following.add(usersFollow.get(i).getTarget());
+			}
+			
+		} catch (SQLException e) {
+			System.err.println("Could not query for following users.");
+		}
+		
+		return following;
+	}
+	
+	
 }

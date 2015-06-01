@@ -4,11 +4,13 @@ public class UserItemAdapter {
 	private int id;
 	private String username;
 	private String location;
+	private boolean following;
 	
-	public UserItemAdapter(int id, String username, String location) {
+	public UserItemAdapter(int id, String username, String location, boolean following) {
 		this.id = id;
 		this.username = username;
 		this.location = location;
+		this.following = following;
 	}
 	
 	public int getId() {
@@ -21,5 +23,9 @@ public class UserItemAdapter {
 	
 	public String getLocation() {
 		return location;
+	}
+	
+	public boolean getFollowing() {
+		return following;
 	}
 }
