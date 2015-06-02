@@ -23,7 +23,6 @@ public class MyDatabaseTest {
 	Dao<AuthToken, String> authTokenDao;
 	Dao<UsersFollow, String> usersFollowDao;
 	Dao<TrafficInformation, String> trafficInformationDao;
-	
 
 	public MyDatabaseTest(String name) {
 		
@@ -41,7 +40,7 @@ public class MyDatabaseTest {
 			TableUtils.createTableIfNotExists(connectionSource, UsersFollow.class);
 			
 			trafficInformationDao = DaoManager.createDao(connectionSource, TrafficInformation.class);
-			TableUtils.createTableIfNotExists(connectionSource, TrafficInformation.class);
+			TableUtils.createTableIfNotExists(connectionSource, TrafficInformation.class);		
 
 		} catch (SQLException e) {
 			System.err.println("Error creating database.");
@@ -131,10 +130,11 @@ public class MyDatabaseTest {
 		
 	}
 	
-	public void addTrafficInformation(String authToken, String description, String location, int intensity) {
+	public void addTrafficInformation(String authToken, String description, String location, String category, int intensity) {
 		TrafficInformation tf = new TrafficInformation();
 		tf.setDescription(description);
 		tf.setLocation(location);
+		tf.setCategory(category);
 		tf.setIntensity(intensity);
 		
 		User user = null;
@@ -255,4 +255,5 @@ public class MyDatabaseTest {
 		}
 
 	}
+
 }

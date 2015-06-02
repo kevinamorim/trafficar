@@ -1,13 +1,17 @@
 package com.sdis.trafficar.android;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.sdis.trafficar.android.client.R;
+import com.sdis.trafficar.helpers.*;
 
-import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,11 +20,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends ListActivity implements DialogInterface.OnClickListener {
 
 	private static final String SERVICE_URL = Constants.BASE_URL + "/TrafficInformationService";
 	private static final String TAG = "HomeActivity";
@@ -33,17 +38,20 @@ public class HomeActivity extends Activity {
 	private String token;
 
 	private int task = -1;
+	
+	private int selectedPostId = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.home);
 
 		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
 		token = settings.getString("token", "0");
+		
+		refresh();
 	}
 
-	public void sendTrafficInformation(View v) {
+	public void sendTrafficInformation() {
 		Intent intent = new Intent(HomeActivity.this, PostTrafficInfoActivity.class);
 		startActivity(intent);	
 	}
@@ -110,14 +118,19 @@ public class HomeActivity extends Activity {
 			switch(task) {
 			case UPDATE_TASK:
 
-				JSONArray params = jso.getJSONArray("info");
-				ArrayList<String> information = new ArrayList<String>();
+				JSONArray postsArray = jso.getJSONArray("info");
+				List<TrafficInfoItemAdapter> posts = new ArrayList<TrafficInfoItemAdapter>();
+				for(int i = 0; i < postsArray.length(); i++) {
+					JSONObject obj = postsArray.getJSONObject(i);
+					int id = obj.getInt("id");
+					String description = obj.getString("description");
+					String location = obj.getString("location");
+					String category = obj.getString("category");
+					int intensity = obj.getInt("intensity");
+					posts.add(new TrafficInfoItemAdapter(id, description, location, category, intensity));
+				}
 
-				for(int i = 0; i < params.length(); i++) {
-					information.add(params.getString(i));
-				}		
-
-				updateTrafficInformation(information);
+				updateTrafficInformation(posts);
 
 				break;
 			case LOGOUT_TASK:
@@ -153,6 +166,9 @@ public class HomeActivity extends Activity {
 		case R.id.menu_refresh:
 			refresh();
 			break;
+		case R.id.menu_send:
+			sendTrafficInformation();
+			break;
 		case R.id.menu_search:
 			explore();
 			break;
@@ -170,19 +186,35 @@ public class HomeActivity extends Activity {
 		return true;
 	}
 
-	private void updateTrafficInformation(ArrayList<String> information) {
-		TableLayout tableLayout = (TableLayout) findViewById(R.id.tl_information);
-		tableLayout.removeAllViews();
-
-		for(int i = 0; i < information.size(); i++) {
-			TableRow row = new TableRow(this);
-			TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-			row.setLayoutParams(lp);
-			TextView tv = new TextView(this);
-			tv.setText(information.get(i));
-			row.addView(tv);
-			tableLayout.addView(row);
+	private void updateTrafficInformation(List<TrafficInfoItemAdapter> posts) {
+		TrafficInfoArrayAdapter adapter = new TrafficInfoArrayAdapter(this, posts);
+		setListAdapter(adapter);
+	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		TrafficInfoItemAdapter item = (TrafficInfoItemAdapter) getListAdapter().getItem(position);
+		selectedPostId = item.getId();
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(item.getDescription());
+		builder.setNeutralButton(R.string.cancel, this);
+		builder.setPositiveButton(R.string.thanks, this);
+		builder.setNegativeButton(R.string.dislike, this);
+		
+		AlertDialog dialog = builder.create();
+		dialog.show();
+	}
+	
+	@Override
+	public void onClick(DialogInterface dialog, int which) {
+		switch(which) {
+		case DialogInterface.BUTTON_POSITIVE:
+			break;
+		case DialogInterface.BUTTON_NEGATIVE:
+			break;
+		default:
+			break;
 		}
 	}
-
 }

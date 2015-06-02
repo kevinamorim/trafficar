@@ -25,10 +25,18 @@ public class TrafficInformation {
 	@DatabaseField
 	private int intensity;
 	
+	@DatabaseField(canBeNull=false)
+	private String category;
+	
 	@DatabaseField(canBeNull=false, foreign=true, foreignAutoRefresh=true)
 	private User user;
 	
-	public TrafficInformation() { }
+	public TrafficInformation() { 
+		description = "";
+		location = "";
+		intensity = 0;
+		category = "";
+	}
 
 	public String getDescription() {
 		return description;
@@ -60,6 +68,23 @@ public class TrafficInformation {
 	
 	public void setUser(User user) {
 		this.user = user;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	
+	@Override
+	public String toString() {
+		return "{ \"id\":\"" + id + "\", \"description\":\"" + description 
+				+ "\", \"location\":\"" + location 
+				+ "\", \"category\":\"" + category 
+				+ "\", \"intensity\":\"" + intensity 
+				+ "\" }";
 	}
 	
 }

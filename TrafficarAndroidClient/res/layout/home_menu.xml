@@ -6,6 +6,10 @@
         android:title="@string/btnRefresh"/>
 
     <item
+        android:id="@+id/menu_send"
+        android:title="@string/btnSend"/>
+
+    <item
         android:id="@+id/menu_search"
         android:title="@string/btnSearch"/>
 

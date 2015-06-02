@@ -23,13 +23,13 @@ public class TrafficInformationService {
 	@Path("/Send")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Send(@HeaderParam("Authorization") String authorization, 
-			@FormParam("description") String description, @FormParam("location") String location, @FormParam("intensity") String intensity) {
+			@FormParam("description") String description, @FormParam("location") String location, @FormParam("category") String category, @FormParam("intensity") String intensity) {
 		
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		
 		if(AuthenticationUtils.authorize(db, authorization)) {
 			int intensityInt = Integer.parseInt(intensity);
-			db.addTrafficInformation(authorization, description, location, intensityInt);
+			db.addTrafficInformation(authorization, description, location, category, intensityInt);
 			db.close();
 			return (new MyJSON(true, "Traffic information posted with success.")).toString();
 		}
@@ -50,12 +50,14 @@ public class TrafficInformationService {
 			
 			MyJSON response = new MyJSON(true, "Information gathered.");
 			
-			ArrayList<String> values = new ArrayList<String>();
+			ArrayList<String> postsJson = new ArrayList<String>();
 			for(int i = 0; i < result.size(); i++) {
-				values.add(result.get(i).getDescription());
+				postsJson.add(result.get(i).toString());
 			}
 			
-			response.putArray("info", values, false);
+			response.putArray("info", postsJson, true);
+			
+			System.out.println("Response: " + response.toString());
 			return response.toString();
 		}
 		

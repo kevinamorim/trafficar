@@ -1,6 +1,5 @@
 package com.sdis.trafficar.helpers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.sdis.trafficar.android.client.R;

@@ -33,7 +33,7 @@ public class PostTrafficInfoActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.post);
-		createSpinner();
+		createSpinners();
 		
 		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
 		token = settings.getString("token", "0");
@@ -46,10 +46,12 @@ public class PostTrafficInfoActivity extends Activity {
 		
 		EditText etDescription = (EditText) findViewById(R.id.et_description);
 		EditText etLocation = (EditText) findViewById(R.id.et_location);
+		Spinner spCategory = (Spinner) findViewById(R.id.sp_category);
 		Spinner spIntensity = (Spinner) findViewById(R.id.sp_intensity);
 		
 		String description = etDescription.getText().toString();
 		String location = etLocation.getText().toString();
+		String category = spCategory.getSelectedItem().toString();
 		String intensity = spIntensity.getSelectedItem().toString();
 		
 		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Getting new info...") {
@@ -62,6 +64,7 @@ public class PostTrafficInfoActivity extends Activity {
 		wst.addHeader("Authorization", token);
 		wst.addParam("description", description);
 		wst.addParam("location", location);
+		wst.addParam("category", category);
 		wst.addParam("intensity", intensity);
 		
 		String url = SERVICE_URL + "/Send";
@@ -99,11 +102,16 @@ public class PostTrafficInfoActivity extends Activity {
 	}
 	
 	
-	private void createSpinner() {
-		Spinner spinner = (Spinner) findViewById(R.id.sp_intensity);
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.intensity_array, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
+	private void createSpinners() {
+		Spinner spIntensity = (Spinner) findViewById(R.id.sp_intensity);
+		ArrayAdapter<CharSequence> adapterIntensity = ArrayAdapter.createFromResource(this, R.array.intensity_array, android.R.layout.simple_spinner_item);
+		adapterIntensity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spIntensity.setAdapter(adapterIntensity);
+		
+		Spinner spCategory = (Spinner) findViewById(R.id.sp_category);
+		ArrayAdapter<CharSequence> adapterCategory = ArrayAdapter.createFromResource(this, R.array.category_array, android.R.layout.simple_spinner_item);
+		adapterCategory.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spCategory.setAdapter(adapterCategory);
 	}
 	
 	@Override
