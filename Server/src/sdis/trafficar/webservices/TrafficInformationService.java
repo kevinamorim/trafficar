@@ -47,7 +47,10 @@ public class TrafficInformationService {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		
 		if(AuthenticationUtils.authorize(db, authorization)) {
-			List<TrafficInformation> result = db.getTrafficInformation();
+			
+			AuthToken token = db.getAuthTokenByToken(authorization);
+			User user = token.getUser();
+			List<TrafficInformation> result = db.getTrafficInformationNotOf(user.getId());
 			db.close();
 			
 			MyJSON response = new MyJSON(true, "Information gathered.");

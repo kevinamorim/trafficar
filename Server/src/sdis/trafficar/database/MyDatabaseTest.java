@@ -174,6 +174,15 @@ public class MyDatabaseTest {
 		return null;
 	}
 
+	public List<TrafficInformation> getTrafficInformationNotOf(int userId) {
+		try {
+			return trafficInformationDao.queryBuilder().where().not().eq(TrafficInformation.USER_ID_FIELD_NAME, userId).query();
+		} catch(SQLException e) {
+			System.err.println("Error querying for User.");
+		}
+		return null;
+	}
+	
 	public List<User> getAllUsers() {
 		
 		try {

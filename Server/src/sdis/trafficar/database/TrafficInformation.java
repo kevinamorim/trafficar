@@ -16,6 +16,7 @@ public class TrafficInformation {
 	public static final String LOCATION_FIELD_NAME = "location";
 	public static final String INTENSITY_FIELD_NAME = "intensity";
 	public static final String USER_FIELD_NAME = "user";
+	public static final String USER_ID_FIELD_NAME = "user_id";
 	
 	@DatabaseField(generatedId=true, allowGeneratedIdInsert=true)
 	private int id;
