@@ -23,8 +23,8 @@ public class TrafficInfoArrayAdapter extends ArrayAdapter<TrafficInfoItemAdapter
 		posts = items;
 	}
 	
-	public void addUser(int id, String description, String location, String category, int intensity) {
-		TrafficInfoItemAdapter obj = new TrafficInfoItemAdapter(id, description, location, category, intensity);
+	public void addUser(int id, String description, String location, String category, int intensity, int feedback) {
+		TrafficInfoItemAdapter obj = new TrafficInfoItemAdapter(id, description, location, category, intensity, feedback);
 		posts.add(obj);
 	}
 	

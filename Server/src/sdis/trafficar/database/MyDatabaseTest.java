@@ -270,10 +270,10 @@ public class MyDatabaseTest {
 
 	}
 
-	public void thanksTrafficInfo(TrafficInformation info, User user) {
+	public void giveFeedbackToTrafficInfo(TrafficInformation info, User user, boolean positive) {
 		
 		if(info != null && user != null) {
-			UserTrafficInfoFeedback feedback = new UserTrafficInfoFeedback(user, info, true);
+			UserTrafficInfoFeedback feedback = new UserTrafficInfoFeedback(user, info, positive);
 			info.addFeedback(feedback);
 			try {
 				trafficInformationDao.update(info);

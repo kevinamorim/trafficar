@@ -125,8 +125,6 @@ public class WebServiceTask extends AsyncTask<String, Integer, String> implement
 	}
 
 	private HttpResponse doResponse(String url) {
-		// Use our connection and data timeouts as parameters for our
-		// DefaultHttpClient
 		HttpClient httpclient = new DefaultHttpClient(getHttpParams());
 
 		HttpResponse response = null;

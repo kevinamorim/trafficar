@@ -92,8 +92,10 @@ public class ProfileActivity extends Activity {
 					String email = jso.getString("email");
 					String name = jso.getString("name");
 					String location = jso.getString("location");
+					int totalPostedInfo = jso.getInt("total_information");
+					int feedback = jso.getInt("feedback");
 
-					setUserDetails(username, email, name, location);
+					setUserDetails(username, email, name, location, totalPostedInfo, feedback);
 
 				} else {
 
@@ -148,16 +150,25 @@ public class ProfileActivity extends Activity {
 		wst.execute(new String[] { url });
 	}
 
-	private void setUserDetails(String username, String email, String name, String location) {
+	private void setUserDetails(String username, String email, String name, String location, int totalPostedInfo, int feedback) {
 		EditText etUsername = (EditText) findViewById(R.id.et_username);
 		EditText etEmail = (EditText) findViewById(R.id.et_email);
 		EditText etName = (EditText) findViewById(R.id.et_name);
 		EditText etLocation = (EditText) findViewById(R.id.et_location);
+		TextView tvTotalPostedInfo = (TextView) findViewById(R.id.tv_total_information);
+		TextView tvFeedback = (TextView) findViewById(R.id.tv_feedback);
 
 		etUsername.setText(username);
 		etEmail.setText(email);
 		etName.setText(name);
 		etLocation.setText(location);
+		tvTotalPostedInfo.setText("" + totalPostedInfo);
+		
+		String feedbackMsg = "";
+		if(feedback > 0) feedbackMsg += "+";
+		feedbackMsg += feedback;
+		
+		tvFeedback.setText(feedbackMsg);
 	}
 
 	private void setUnauthorized() {

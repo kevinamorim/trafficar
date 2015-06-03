@@ -36,7 +36,9 @@ public class ProfileService {
 					response.put("username", user.getUsername());
 					response.put("email", user.getEmail());
 					response.put("name", user.getName());
-					response.put("location", user.getLocation());			
+					response.put("location", user.getLocation());	
+					response.put("total_information", "" + user.totalTrafficInformation());
+					response.put("feedback", "" + user.totalFeedback());
 					
 					return response.toString();
 				}

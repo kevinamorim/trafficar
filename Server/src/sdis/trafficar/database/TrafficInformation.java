@@ -101,12 +101,24 @@ public class TrafficInformation {
 		return (new ArrayList<UserTrafficInfoFeedback>(feedbacks)).get(position);
 	}
 	
+	public int getTotalFeedback() {
+		int sum = 0;
+		if(feedbacks != null) {
+			ArrayList<UserTrafficInfoFeedback> tmp = new ArrayList<UserTrafficInfoFeedback>(feedbacks);
+			for(int i = 0; i < tmp.size(); i++) {
+				sum += tmp.get(i).getFeedback();
+			}
+		}
+		return sum;
+	}
+	
 	@Override
 	public String toString() {
 		return "{ \"id\":\"" + id + "\", \"description\":\"" + description 
 				+ "\", \"location\":\"" + location 
 				+ "\", \"category\":\"" + category 
-				+ "\", \"intensity\":\"" + intensity 
+				+ "\", \"intensity\":\"" + intensity
+				+ "\", \"feedback\":\"" + getTotalFeedback()
 				+ "\" }";
 	}
 	

@@ -20,6 +20,8 @@
     <string name="category">Category:</string>
     <string name="confirm_unfollow">Unfollow user?</string>
     <string name="information_posted">Information posted with success.</string>
+    <string name="totalPostedInformation">Number of Posts:</string>
+    <string name="totalFeedback">Feedback:</string>
     <string name="yes">Yes</string>
     <string name="no">Cancel</string>
     <string name="btnCheck">CHECK</string>

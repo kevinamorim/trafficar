@@ -128,7 +128,8 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 					String location = obj.getString("location");
 					String category = obj.getString("category");
 					int intensity = obj.getInt("intensity");
-					posts.add(new TrafficInfoItemAdapter(id, description, location, category, intensity));
+					int feedback = obj.getInt("feedback");
+					posts.add(new TrafficInfoItemAdapter(id, description, location, category, intensity, feedback));
 				}
 
 				updateTrafficInformation(posts);
@@ -200,8 +201,14 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 		TrafficInfoItemAdapter item = (TrafficInfoItemAdapter) getListAdapter().getItem(position);
 		selectedPostId = item.getId();
 		
+		// Build dialog message
+		int feedback = item.getFeedback();
+		String msg = item.getDescription() + " ( ";
+		if(feedback > 0) msg += "+";
+		msg += item.getFeedback() + " )";
+		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage(item.getDescription());
+		builder.setMessage(msg);
 		builder.setNeutralButton(R.string.cancel, this);
 		builder.setPositiveButton(R.string.thanks, this);
 		builder.setNegativeButton(R.string.dislike, this);
@@ -214,16 +221,19 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 	public void onClick(DialogInterface dialog, int which) {
 		switch(which) {
 		case DialogInterface.BUTTON_POSITIVE:
-			thanks();
+			giveFeedback(true);
 			break;
 		case DialogInterface.BUTTON_NEGATIVE:
+			giveFeedback(false);
 			break;
 		default:
 			break;
 		}
+		
+		refresh();
 	}
 	
-	private void thanks() {
+	private void giveFeedback(boolean positive) {
 		
 		task = THANK_INFO;
 
@@ -236,10 +246,11 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 		
 		wst.addHeader("Authorization", token);
 		wst.addParam("id", "" + selectedPostId);
+		wst.addParam("positive", "" + positive);
 		
 		selectedPostId = -1;
 
-		String url = SERVICE_URL + "/Thanks";
+		String url = SERVICE_URL + "/Feedback";
 
 		wst.execute(new String[] { url });
 	}

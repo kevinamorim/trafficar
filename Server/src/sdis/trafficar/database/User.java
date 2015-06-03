@@ -1,6 +1,10 @@
 package sdis.trafficar.database;
 
+import java.util.ArrayList;
+
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="User")
@@ -33,6 +37,9 @@ public class User {
 	
 	@DatabaseField
 	private String location;
+	
+	@ForeignCollectionField(eager=true)
+	private ForeignCollection<TrafficInformation> trafficInfo;
 	
 	public User() {
 		this.username = "";
@@ -93,6 +100,21 @@ public class User {
 	
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	
+	public int totalTrafficInformation() {
+		return trafficInfo.size();
+	}
+	
+	public int totalFeedback() {
+		int feedback = 0;
+		if(trafficInfo != null) {
+			ArrayList<TrafficInformation> tmp = new ArrayList<TrafficInformation>(trafficInfo);
+			for(int i = 0; i < tmp.size(); i++) {
+				feedback += tmp.get(i).getTotalFeedback();
+			}
+		}
+		return feedback;
 	}
 	
 	@Override

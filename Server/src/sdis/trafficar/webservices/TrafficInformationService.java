@@ -82,9 +82,9 @@ public class TrafficInformationService {
 	}
 	
 	@POST
-	@Path("/Thanks")
+	@Path("/Feedback")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String Thanks(@HeaderParam("Authorization") String authToken, @FormParam("id") int id) {
+	public String Feedback(@HeaderParam("Authorization") String authToken, @FormParam("id") int id, @FormParam("positive") boolean positive) {
 		
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
 		
@@ -93,7 +93,7 @@ public class TrafficInformationService {
 			AuthToken token = db.getAuthTokenByToken(authToken);
 			User user = token.getUser();
 			TrafficInformation info = db.getInfoById(id);
-			db.thanksTrafficInfo(info, user);
+			db.giveFeedbackToTrafficInfo(info, user, positive);
 			db.close();
 			
 			return (new MyJSON(true, "Info thanked with success.")).toString(); 

@@ -14,6 +14,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.sdis.trafficar.android.client.R;
+import com.sdis.trafficar.helpers.SimpleAlertDialog;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -87,7 +88,7 @@ public class AuthenticationActivity extends Activity {
 			String username = getUsername();
 			String password = getPassword();
 
-			WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...") {
+			WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Signing in...") {
 				@Override
 				public void onResponseReceived(String result) {
 					((AuthenticationActivity) mContext).handleResponse(result);
@@ -113,7 +114,7 @@ public class AuthenticationActivity extends Activity {
 			String username = getUsername();
 			String password = getPassword();
 
-			WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Posting data...") {
+			WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Registering user...") {
 				@Override
 				public void onResponseReceived(String result) {
 					((AuthenticationActivity) mContext).handleResponse(result);
@@ -132,6 +133,14 @@ public class AuthenticationActivity extends Activity {
 
 	public void handleResponse(String response) {
 
+		TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+		
+		if(response == null || response.length() == 0) {
+			tvCheck.setTextColor(Color.RED);
+			tvCheck.setText("Connection failed.");
+			return;
+		}
+
 		try {
 
 			JSONObject jso = new JSONObject(response);
@@ -141,8 +150,8 @@ public class AuthenticationActivity extends Activity {
 
 			switch(task) {
 			case CHECK:
-
-				TextView tvCheck = (TextView) findViewById(R.id.tv_check);
+				
+				tvCheck.setTextColor(Color.GREEN);
 				tvCheck.setText(msg);
 				break;
 
@@ -165,13 +174,13 @@ public class AuthenticationActivity extends Activity {
 
 				TextView tvMessage = (TextView) findViewById(R.id.message);
 				tvMessage.setText(msg);
+				
+				SimpleAlertDialog dialog = new SimpleAlertDialog(this, "User registered with success!");
 
 				break;
 
 			case AUTHENTICATE:
-				Log.d(TAG, "ENTROU!!!!!");
 				if(success) {
-					Log.d(TAG, "SUCESSO!!!!!");
 					Intent intent = new Intent(AuthenticationActivity.this, HomeActivity.class);
 					startActivity(intent);
 				} else {
@@ -184,7 +193,6 @@ public class AuthenticationActivity extends Activity {
 			default:
 				Log.e(TAG, "An undefined task just occured.");
 				break;
-
 			}
 
 		} catch(Exception e) {
@@ -296,12 +304,12 @@ public class AuthenticationActivity extends Activity {
 		return valid;
 
 	}
-	
+
 	private void settings() {
 		Intent intent = new Intent(AuthenticationActivity.this, SettingsActivity.class);
 		startActivity(intent);
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -317,7 +325,7 @@ public class AuthenticationActivity extends Activity {
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
-			
+
 		}
 
 		return true;

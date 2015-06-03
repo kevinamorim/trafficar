@@ -7,13 +7,15 @@ public class TrafficInfoItemAdapter {
 	private String location;
 	private String category;
 	private int intensity;
+	private int feedback;
 	
-	public TrafficInfoItemAdapter(int id, String description, String location, String category, int intensity) {
+	public TrafficInfoItemAdapter(int id, String description, String location, String category, int intensity, int feedback) {
 		this.id = id;
 		this.description = description;
 		this.location = location;
 		this.category = category;
 		this.intensity = intensity;
+		this.feedback = feedback;
 	}
 	
 	public int getId(){
@@ -54,6 +56,14 @@ public class TrafficInfoItemAdapter {
 	
 	public void setIntensity(int intensity) {
 		this.intensity = intensity;
+	}
+	
+	public int getFeedback() {
+		return feedback;
+	}
+	
+	public void setFeedback(int feedback) {
+		this.feedback = feedback;
 	}
 
 }
