@@ -1,6 +1,10 @@
 package sdis.trafficar.database;
 
+import java.util.ArrayList;
+
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName="TrafficInformation")
@@ -30,6 +34,9 @@ public class TrafficInformation {
 	
 	@DatabaseField(canBeNull=false, foreign=true, foreignAutoRefresh=true)
 	private User user;
+	
+	@ForeignCollectionField(eager=true)
+	private ForeignCollection<UserTrafficInfoFeedback> feedbacks;
 	
 	public TrafficInformation() { 
 		description = "";
@@ -76,6 +83,22 @@ public class TrafficInformation {
 	
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	
+	public void addFeedback(UserTrafficInfoFeedback feedback) {
+		feedbacks.add(feedback);
+	}
+	
+	public void removeFeedback(UserTrafficInfoFeedback feedback) {
+		feedbacks.remove(feedback);
+	}
+	
+	public ArrayList<UserTrafficInfoFeedback> getFeedbacks() {
+		return new ArrayList<UserTrafficInfoFeedback>(feedbacks);
+	}
+	
+	public UserTrafficInfoFeedback getFeedbackAt(int position) {
+		return (new ArrayList<UserTrafficInfoFeedback>(feedbacks)).get(position);
 	}
 	
 	@Override

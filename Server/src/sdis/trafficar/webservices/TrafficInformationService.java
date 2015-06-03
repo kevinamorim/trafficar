@@ -11,8 +11,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import sdis.trafficar.database.AuthToken;
 import sdis.trafficar.database.MyDatabaseTest;
 import sdis.trafficar.database.TrafficInformation;
+import sdis.trafficar.database.User;
 import sdis.trafficar.json.MyJSON;
 import sdis.trafficar.utils.AuthenticationUtils;
 
@@ -79,7 +81,26 @@ public class TrafficInformationService {
 		return AuthenticationUtils.unauthorizedAccess();
 	}
 	
-	
+	@POST
+	@Path("/Thanks")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String Thanks(@HeaderParam("Authorization") String authToken, @FormParam("id") int id) {
+		
+		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
+		
+		if(AuthenticationUtils.authorize(db, authToken)) {
+			
+			AuthToken token = db.getAuthTokenByToken(authToken);
+			User user = token.getUser();
+			TrafficInformation info = db.getInfoById(id);
+			db.thanksTrafficInfo(info, user);
+			db.close();
+			
+			return (new MyJSON(true, "Info thanked with success.")).toString(); 
+		}
+		
+		return AuthenticationUtils.unauthorizedAccess();
+	}
 
 
 }

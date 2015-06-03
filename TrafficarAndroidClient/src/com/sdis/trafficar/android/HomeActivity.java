@@ -32,6 +32,7 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 
 	private static final int UPDATE_TASK = 0;
 	private static final int LOGOUT_TASK = 1;
+	private static final int THANK_INFO = 2;
 
 	private SharedPreferences settings; 
 
@@ -141,6 +142,9 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 				}
 				
 				break;
+			
+			case THANK_INFO: 
+				break;
 			default:
 				break;
 			}
@@ -210,11 +214,33 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 	public void onClick(DialogInterface dialog, int which) {
 		switch(which) {
 		case DialogInterface.BUTTON_POSITIVE:
+			thanks();
 			break;
 		case DialogInterface.BUTTON_NEGATIVE:
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private void thanks() {
+		
+		task = THANK_INFO;
+
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Thanking for the info..."){
+			@Override
+			public void onResponseReceived(String response) {
+				((HomeActivity) mContext).handleResponse(response);
+			}
+		};
+		
+		wst.addHeader("Authorization", token);
+		wst.addParam("id", "" + selectedPostId);
+		
+		selectedPostId = -1;
+
+		String url = SERVICE_URL + "/Thanks";
+
+		wst.execute(new String[] { url });
 	}
 }

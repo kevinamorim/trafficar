@@ -23,6 +23,7 @@ public class MyDatabaseTest {
 	Dao<AuthToken, String> authTokenDao;
 	Dao<UsersFollow, String> usersFollowDao;
 	Dao<TrafficInformation, String> trafficInformationDao;
+	Dao<UserTrafficInfoFeedback, String> userTrafficInfoFeedbackDao;
 
 	public MyDatabaseTest(String name) {
 		
@@ -40,10 +41,14 @@ public class MyDatabaseTest {
 			TableUtils.createTableIfNotExists(connectionSource, UsersFollow.class);
 			
 			trafficInformationDao = DaoManager.createDao(connectionSource, TrafficInformation.class);
-			TableUtils.createTableIfNotExists(connectionSource, TrafficInformation.class);		
+			TableUtils.createTableIfNotExists(connectionSource, TrafficInformation.class);
+			
+			userTrafficInfoFeedbackDao = DaoManager.createDao(connectionSource, UserTrafficInfoFeedback.class);
+			TableUtils.createTableIfNotExists(connectionSource, UserTrafficInfoFeedback.class);
 
 		} catch (SQLException e) {
-			System.err.println("Error creating database.");
+			System.err.println("Error creating database: ");
+			e.printStackTrace();
 		} 
 	
 	}
@@ -200,6 +205,15 @@ public class MyDatabaseTest {
 		return null;
 	}
 	
+	public TrafficInformation getInfoById(int id) {
+		try {
+			return trafficInformationDao.queryBuilder().where().eq(TrafficInformation.ID_FIELD_NAME, id).queryForFirst();
+		} catch(SQLException e) {
+			System.err.println("Error querying for TrafficInformation.");
+		}
+		return null;
+	}
+	
 	public void editUser(User user) {
 		try {
 			userDao.update(user);
@@ -256,4 +270,16 @@ public class MyDatabaseTest {
 
 	}
 
+	public void thanksTrafficInfo(TrafficInformation info, User user) {
+		
+		if(info != null && user != null) {
+			UserTrafficInfoFeedback feedback = new UserTrafficInfoFeedback(user, info, true);
+			info.addFeedback(feedback);
+			try {
+				trafficInformationDao.update(info);
+			} catch (SQLException e) {
+				System.err.println("Error adding feedback to traffic information");
+			}
+		}
+	}
 }
