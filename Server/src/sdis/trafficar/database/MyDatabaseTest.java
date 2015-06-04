@@ -291,4 +291,36 @@ public class MyDatabaseTest {
 			}
 		}
 	}
+	
+	public ArrayList<TrafficInformation> getTrafficInfoFromFollowing(int id) {
+		
+		ArrayList<TrafficInformation> trafficInfo = new ArrayList<TrafficInformation>();
+		System.out.println("Entrou...");
+		try {
+			List<UsersFollow> usersFollow = usersFollowDao.queryBuilder().where().eq("sourceUser_id", id).query();
+			System.out.println("Size1: " + usersFollow.size());
+			
+			
+			List<TrafficInformation> all = getTrafficInformation();
+			System.out.println("Size2: " + all.size());
+			for(int i = 0; i < all.size(); i++) {
+				if(anyFollowingInArray(usersFollow, all.get(i).getUser().getId())) {
+					trafficInfo.add(all.get(i));
+				}
+			}
+			
+		} catch (SQLException e) {
+			System.err.println("Error getting traffic information...");
+		}
+		
+		System.out.println("Size: " + trafficInfo.size());
+		return trafficInfo;
+		
+	}
+	
+	private boolean anyFollowingInArray(List<UsersFollow> list, int id) {
+		for(int i = 0; i < list.size(); i++)
+			if(list.get(i).getTarget().getId() == id) return true;	
+		return false;
+	}
 }

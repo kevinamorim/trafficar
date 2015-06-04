@@ -50,7 +50,7 @@ public class TrafficInformationService {
 			
 			AuthToken token = db.getAuthTokenByToken(authorization);
 			User user = token.getUser();
-			List<TrafficInformation> result = db.getTrafficInformationNotOf(user.getId());
+			List<TrafficInformation> result = db.getTrafficInfoFromFollowing(user.getId());
 			db.close();
 			
 			MyJSON response = new MyJSON(true, "Information gathered.");
