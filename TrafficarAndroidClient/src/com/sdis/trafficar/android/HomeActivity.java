@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 public class HomeActivity extends ListActivity implements DialogInterface.OnClickListener {
 
-	private static final String SERVICE_URL = Constants.BASE_URL + "/TrafficInformationService";
+	private String serviceUrl; 
 	private static final String TAG = "HomeActivity";
 
 	private static final int UPDATE_TASK = 0;
@@ -47,6 +47,7 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 		super.onCreate(savedInstanceState);
 
 		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
+		serviceUrl = ServiceHelpers.getServiceUrl(settings, "/TrafficInformationService");
 		token = settings.getString("token", "0");
 		
 		refresh();
@@ -70,7 +71,7 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 
 		wst.addHeader("Authorization", token);
 
-		String url = SERVICE_URL + "/Logout";
+		String url = serviceUrl + "/Logout";
 
 		wst.execute(new String[] { url });
 
@@ -89,7 +90,7 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 		
 		wst.addHeader("Authorization", token);
 
-		String url = SERVICE_URL + "/GetInfo";
+		String url = serviceUrl + "/GetInfo";
 
 		wst.execute(new String[] { url });
 
@@ -250,7 +251,7 @@ public class HomeActivity extends ListActivity implements DialogInterface.OnClic
 		
 		selectedPostId = -1;
 
-		String url = SERVICE_URL + "/Feedback";
+		String url = serviceUrl + "/Feedback";
 
 		wst.execute(new String[] { url });
 	}

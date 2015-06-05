@@ -21,7 +21,7 @@ import com.sdis.trafficar.helpers.*;
 
 public class FollowingActivity extends ListActivity implements DialogInterface.OnClickListener {
 
-	private static final String SERVICE_URL = Constants.BASE_URL + "/UserService";
+	private String serviceUrl; 
 	private static final String TAG = "FollowingActivity";
 
 	private static final int GET_FOLLOWING = 0;
@@ -38,6 +38,7 @@ public class FollowingActivity extends ListActivity implements DialogInterface.O
 		super.onCreate(savedInstanceState);
 
 		settings = this.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+		serviceUrl = ServiceHelpers.getServiceUrl(settings, "/UserService");
 		token = settings.getString(Constants.TOKEN_SETTINGS_NAME, Constants.TOKEN_DEF_VALUE);
 	
 		getUsers();
@@ -105,7 +106,7 @@ public class FollowingActivity extends ListActivity implements DialogInterface.O
 
 		wst.addHeader("Authorization", token);
 
-		String url = SERVICE_URL + "/Following";
+		String url = serviceUrl + "/Following";
 
 		wst.execute(new String[] { url });
 	}
@@ -129,7 +130,7 @@ public class FollowingActivity extends ListActivity implements DialogInterface.O
 		wst.addHeader("Authorization", token);
 		wst.addParam("id", "" + idUnfollow);
 		
-		String url = SERVICE_URL + "/Unfollow";
+		String url = serviceUrl + "/Unfollow";
 		
 		wst.execute(new String[] { url });
 		

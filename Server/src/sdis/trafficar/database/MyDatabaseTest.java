@@ -63,7 +63,7 @@ public class MyDatabaseTest {
 
 	}
 	
-	public boolean registerUser(String username, String password) {
+	public boolean registerUser(String username, String password, String email, String name, String location, boolean facebook) {
 		
 		QueryBuilder<User, String> queryBuilder = userDao.queryBuilder();
 		try {
@@ -72,8 +72,10 @@ public class MyDatabaseTest {
 				User user = new User();
 				user.setUsername(username);
 				user.setPassword(password);
-				user.setEmail("teste@teste.com");
-				user.setFacebookLogin(false);
+				user.setEmail(email);
+				user.setName(name);
+				user.setLocation(location);
+				user.setFacebookLogin(facebook);
 				userDao.create(user);
 				return true;
 			}
@@ -322,5 +324,29 @@ public class MyDatabaseTest {
 		for(int i = 0; i < list.size(); i++)
 			if(list.get(i).getTarget().getId() == id) return true;	
 		return false;
+	}
+	
+	public User checkIfUserExists(String username) {
+		
+		User user = null;
+		try {
+			user = userDao.queryBuilder().where().eq(User.USERNAME_FIELD_NAME, username).queryForFirst();
+		} catch (SQLException e) {
+			System.err.println("Error getting user...");
+		}
+		
+		return user;
+	}
+	
+	public void addAuthToken(String token, User user) {
+		AuthToken authToken = new AuthToken();
+		authToken.setToken(token);
+		authToken.setUser(user);
+		
+		try {
+			authTokenDao.create(authToken);
+		} catch (SQLException e) {
+			System.err.println("Error inserting AuthToken.");
+		}
 	}
 }

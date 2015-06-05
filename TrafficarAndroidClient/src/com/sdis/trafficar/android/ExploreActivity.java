@@ -18,7 +18,7 @@ import android.widget.ListView;
 
 public class ExploreActivity extends ListActivity {
 
-	private static final String SERVICE_URL = Constants.BASE_URL + "/UserService";
+	private String serviceUrl; 
 	private static final String TAG = "ExploreActivity";
 
 	private static final int GET_USERS_TASK = 0;
@@ -33,6 +33,7 @@ public class ExploreActivity extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		settings = this.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
+		serviceUrl = ServiceHelpers.getServiceUrl(settings, "/UserService");
 		token = settings.getString(Constants.TOKEN_SETTINGS_NAME, Constants.TOKEN_DEF_VALUE);
 		getUsers();
 	}
@@ -117,7 +118,7 @@ public class ExploreActivity extends ListActivity {
 
 		wst.addHeader("Authorization", token);
 
-		String url = SERVICE_URL + "/GetUsers";
+		String url = serviceUrl + "/GetUsers";
 		wst.execute(new String[] { url });
 
 	}
@@ -147,7 +148,7 @@ public class ExploreActivity extends ListActivity {
 		wst.addHeader("Authorization", token);
 		wst.addParam("id", "" + id);
 		
-		String url = SERVICE_URL + "/FollowUser";
+		String url = serviceUrl + "/FollowUser";
 		wst.execute(new String[] { url });
 		
 	}

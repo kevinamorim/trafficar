@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import sdis.trafficar.database.MyDatabaseTest;
+import sdis.trafficar.database.User;
 import sdis.trafficar.json.MyJSON;
 import sdis.trafficar.utils.AuthenticationUtils;
 
@@ -20,7 +21,8 @@ public class MembershipService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String Register(@FormParam("username") String username, @FormParam("password") String password) {
 		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
-		boolean success = db.registerUser(username, AuthenticationUtils.hash(password));
+		boolean success = db.registerUser(username, AuthenticationUtils.hash(password), "", "", "", false);
+		
 		db.close();
 		
 		String msg = success ?  "Register successfull." : " Username invalid, try another one.";
@@ -68,6 +70,36 @@ public class MembershipService {
 		String msg = (success) ? "Authentication valid." : "Authentication failed.";
 		
 		return (new MyJSON(success, msg).toString());
+	}
+
+	
+	@POST
+	@Path("/LoginFacebook")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String LoginFacebook(@FormParam("username") String username, @FormParam("email") String email, 
+			@FormParam("name") String name, @FormParam("location") String location, @FormParam("token") String token) {
+		
+		MyDatabaseTest db = new MyDatabaseTest(Constants.DB_NAME);
+		boolean success = false;
+		User user = db.checkIfUserExists(username);
+		if(user == null) {
+			// Register new user
+			db.registerUser(username, AuthenticationUtils.generateRandomPassword(), email, name, location, true);
+			user = db.checkIfUserExists(username);
+		}
+		
+		if(user != null) {
+			db.addAuthToken(token, user);
+			success = true;
+		}
+		
+		String msg = (success) ? "Authentication valid." : "Authentication failed.";
+		MyJSON response = new MyJSON(success, msg);
+		
+		if(success) response.put("token", token);
+		
+		return (response.toString());
+		
 	}
 	
 	@GET

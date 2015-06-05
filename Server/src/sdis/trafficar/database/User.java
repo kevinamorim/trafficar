@@ -41,6 +41,14 @@ public class User {
 	@ForeignCollectionField(eager=true)
 	private ForeignCollection<TrafficInformation> trafficInfo;
 	
+	public User(String username, String password, String email, String name, String location, boolean facebookLogin) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.location = location;
+		this.facebookLogin = facebookLogin;
+	}
+	
 	public User() {
 		this.username = "";
 		this.password = "";

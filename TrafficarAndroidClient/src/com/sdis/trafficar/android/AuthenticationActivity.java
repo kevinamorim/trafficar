@@ -2,19 +2,8 @@ package com.sdis.trafficar.android;
 
 import java.util.Arrays;
 
+import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.sdis.trafficar.android.client.R;
-import com.sdis.trafficar.helpers.SimpleAlertDialog;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,17 +18,32 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.sdis.trafficar.android.client.R;
+import com.sdis.trafficar.helpers.ServiceHelpers;
+import com.sdis.trafficar.helpers.SimpleAlertDialog;
+
 public class AuthenticationActivity extends Activity {
 
 	private SharedPreferences settings;
 
-	private static final String SERVICE_URL = Constants.BASE_URL + "/MembershipService";
+	private String serviceUrl;
 	private static final String TAG = "AuthenticationActivity";
 
 	private static final int LOGIN = 0;
 	private static final int REGISTER = 1;
 	private static final int CHECK = 2;
 	private static final int AUTHENTICATE = 3;
+	private static final int LOGIN_FB = 4;
 
 	private int task = -1;
 
@@ -50,12 +54,13 @@ public class AuthenticationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		FacebookSdk.sdkInitialize(getApplicationContext());
 		setContentView(R.layout.main);
-
+		
+		initSharedPrefs();
+		serviceUrl = ServiceHelpers.getServiceUrl(settings, "/MembershipService");
 		setAddress();
 		setFacebookLogin();
 
-		// Check if a login exists
-		initSharedPrefs();
+		// Check if a login exists	
 		checkForLogin();
 	}
 
@@ -76,7 +81,7 @@ public class AuthenticationActivity extends Activity {
 			}
 		};
 
-		String url = SERVICE_URL + "/Test";
+		String url = serviceUrl + "/Test";
 		wst.execute(new String[] { url });
 	}
 
@@ -98,7 +103,7 @@ public class AuthenticationActivity extends Activity {
 			wst.addParam("username", username);
 			wst.addParam("password", password);
 
-			String url = SERVICE_URL + "/Login";
+			String url = serviceUrl + "/Login";
 
 			wst.execute(new String[] { url });
 		}
@@ -123,12 +128,34 @@ public class AuthenticationActivity extends Activity {
 
 			wst.addParam("username", username);
 			wst.addParam("password", password);
+			wst.addParam("facebook", "false");
 
-			String url =  SERVICE_URL + "/Register";
+			String url =  serviceUrl + "/Register";
 
 			wst.execute(new String[] { url });
 		}
 
+	}
+	
+	public void loginWithFacebook(String username, String name, String email, String location, String token) {
+		task = LOGIN_FB;
+		
+		WebServiceTask wst = new WebServiceTask(WebServiceTask.POST_TASK, this, "Registering with Facebook...") {
+			@Override
+			public void onResponseReceived(String response) {
+				((AuthenticationActivity) mContext).handleResponse(response);
+			}
+		};
+		
+		wst.addParam("username", username);
+		wst.addParam("email", email);
+		wst.addParam("name", name);
+		wst.addParam("location", location);
+		wst.addParam("token", token);
+		
+		String url = serviceUrl + "/LoginFacebook";
+		
+		wst.execute(new String[] { url });
 	}
 
 	public void handleResponse(String response) {
@@ -147,6 +174,8 @@ public class AuthenticationActivity extends Activity {
 
 			boolean success = jso.getBoolean("success");
 			String msg = jso.getString("message");
+			
+			String authToken;
 
 			switch(task) {
 			case CHECK:
@@ -157,7 +186,7 @@ public class AuthenticationActivity extends Activity {
 
 			case LOGIN:
 
-				String authToken = jso.getString("token");
+				authToken = jso.getString("token");
 
 				if(success) {
 					saveAuthToken(authToken);
@@ -188,6 +217,20 @@ public class AuthenticationActivity extends Activity {
 					tvMessage.setText(msg);
 				}
 
+				break;
+				
+			case LOGIN_FB:
+				
+				authToken = jso.getString("token");
+				if(success) {
+					saveAuthToken(authToken);
+					Intent intent = new Intent(AuthenticationActivity.this, HomeActivity.class);
+					startActivity(intent);
+				} else {
+					tvMessage = (TextView) findViewById(R.id.message);
+					tvMessage.setText(msg);
+				}
+				
 				break;
 
 			default:
@@ -223,13 +266,13 @@ public class AuthenticationActivity extends Activity {
 
 	private void setAddress() {
 		TextView tv = (TextView) findViewById(R.id.tv_address);
-		tv.setText(Constants.BASE_URL);
+		tv.setText(serviceUrl);
 	}
 
 	private void setFacebookLogin() {
 		callbackManager = CallbackManager.Factory.create();
 		LoginButton loginFb = (LoginButton) findViewById(R.id.bn_login_fb);
-		loginFb.setReadPermissions(Arrays.asList("public_profile, email"));
+		loginFb.setReadPermissions(Arrays.asList("public_profile, email, user_location"));
 
 		LoginManager.getInstance().registerCallback(callbackManager,
 				new FacebookCallback<LoginResult>() {
@@ -239,15 +282,28 @@ public class AuthenticationActivity extends Activity {
 						loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
 							@Override
 							public void onCompleted(JSONObject me, GraphResponse response) {
+								
+								String token = AccessToken.getCurrentAccessToken().getToken();
+								
 								if (response.getError() != null) {
 									// handle error
 								} else {
-									String username = me.optString("username");
+									String username = me.optString("id");
 									String email = me.optString("email");
-									String id = me.optString("id");
-									Log.e(TAG, "User: " + username);
-									Log.e(TAG, "Email: " + email);
-									Log.e(TAG, "ID: " + id);
+									String name = me.optString("name");
+
+							
+									JSONObject locationObj;
+									String location = "";
+									try {
+										locationObj = new JSONObject(me.optString("location"));
+										location = locationObj.getString("name");
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									
+									loginWithFacebook(username, email, name, location, token);
 								}
 							}
 						}).executeAsync();
@@ -278,7 +334,7 @@ public class AuthenticationActivity extends Activity {
 				}
 			};
 			wst.addHeader("Authorization", token);
-			String url =  SERVICE_URL + "/CheckAuth";
+			String url =  serviceUrl + "/CheckAuth";
 
 			wst.execute(new String[] { url });
 		}

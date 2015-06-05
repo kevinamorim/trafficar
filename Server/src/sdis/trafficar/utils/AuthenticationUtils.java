@@ -3,6 +3,7 @@ package sdis.trafficar.utils;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 import sdis.trafficar.database.MyDatabaseTest;
 import sdis.trafficar.json.MyJSON;
@@ -48,5 +49,9 @@ public class AuthenticationUtils {
 			}
 
 			return "";
+	}
+	
+	public static String generateRandomPassword() {
+		return UUID.randomUUID().toString();
 	}
 }

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import com.facebook.CallbackManager;
 import com.sdis.trafficar.android.client.R;
+import com.sdis.trafficar.helpers.ServiceHelpers;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,7 +19,7 @@ public class ProfileActivity extends Activity {
 
 	private SharedPreferences settings;
 
-	private static final String SERVICE_URL = Constants.BASE_URL + "/ProfileService";
+	private String serviceUrl; 
 	private static final String TAG = "ProfileActivity";
 
 	private static final int GET_PROFILE = 0;
@@ -33,7 +34,10 @@ public class ProfileActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profile);
-
+		
+		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
+		serviceUrl = ServiceHelpers.getServiceUrl(settings, "/ProfileService");
+		
 		getAuthentication();	
 		getUserInfo();
 	}
@@ -65,7 +69,7 @@ public class ProfileActivity extends Activity {
 		wst.addParam("name", name);
 		wst.addParam("location", location);
 
-		String url =  SERVICE_URL + "/EditProfile";
+		String url =  serviceUrl + "/EditProfile";
 		wst.execute(new String[] { url });
 
 	}
@@ -146,7 +150,7 @@ public class ProfileActivity extends Activity {
 		};
 
 		wst.addHeader("Authorization", authToken);
-		String url =  SERVICE_URL + "/GetProfile";
+		String url =  serviceUrl + "/GetProfile";
 		wst.execute(new String[] { url });
 	}
 

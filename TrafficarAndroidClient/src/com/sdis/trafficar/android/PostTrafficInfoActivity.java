@@ -3,6 +3,7 @@ package com.sdis.trafficar.android;
 import org.json.JSONObject;
 
 import com.sdis.trafficar.android.client.R;
+import com.sdis.trafficar.helpers.ServiceHelpers;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,7 +19,7 @@ import android.widget.TextView;
 
 public class PostTrafficInfoActivity extends Activity {
 	
-	private static final String SERVICE_URL = Constants.BASE_URL + "/TrafficInformationService";
+	private String serviceUrl; 
 	private static final String TAG = "PostTrafficInfoActivity";
 	
 	private static final int POST_INFO = 0;
@@ -36,6 +37,7 @@ public class PostTrafficInfoActivity extends Activity {
 		createSpinners();
 		
 		settings = this.getSharedPreferences("userdetails", MODE_PRIVATE);
+		serviceUrl = ServiceHelpers.getServiceUrl(settings, "/TrafficInformationService");
 		token = settings.getString("token", "0");
 		
 	}
@@ -67,7 +69,7 @@ public class PostTrafficInfoActivity extends Activity {
 		wst.addParam("category", category);
 		wst.addParam("intensity", intensity);
 		
-		String url = SERVICE_URL + "/Send";
+		String url = serviceUrl + "/Send";
 		wst.execute(new String[] { url });
 		
 	}
