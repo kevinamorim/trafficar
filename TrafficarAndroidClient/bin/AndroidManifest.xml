@@ -1,0 +1,84 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sdis.trafficar.android.client"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:screenOrientation="portrait"
+        android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationName"
+            android:value="@string/facebook_app_name" />
+
+        <activity
+            android:name="com.sdis.trafficar.android.AuthenticationActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.sdis.trafficar.android.HomeActivity"
+            android:label="@string/app_name" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sdis.trafficar.android.AndroidRESTClientActivity" />
+        </activity>
+        <activity
+            android:name="com.sdis.trafficar.android.ProfileActivity"
+            android:label="@string/profile_activity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sdis.trafficar.android.AndroidRESTClientActivity" />
+        </activity>
+        <activity
+            android:name="com.sdis.trafficar.android.PostTrafficInfoActivity"
+            android:label="@string/post_activity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sdis.trafficar.android.AndroidRESTClientActivity" />
+        </activity>
+        <activity
+            android:name="com.sdis.trafficar.android.ExploreActivity"
+            android:label="@string/explore_activity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sdis.trafficar.android.AndroidRESTClientActivity" />
+        </activity>
+        <activity
+            android:name="com.sdis.trafficar.android.FollowingActivity"
+            android:label="@string/following_activity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sdis.trafficar.android.AndroidRESTClientActivity" />
+        </activity>
+        <activity
+            android:name="com.sdis.trafficar.android.SettingsActivity"
+            android:label="@string/settings_activity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sdis.trafficar.android.AndroidRESTClientActivity" />
+        </activity>
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>

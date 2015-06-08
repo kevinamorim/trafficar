@@ -40,7 +40,7 @@
     <string name="btnDislike">Dislike</string>
     <string name="ip_config_hint">Server IP Address&#8230;</string>
     <string name="port_config_hint">Server Port Number&#8230;</string>
-    <string name="unauthorizedAccess">YOU SHOULD NOT BE HERE. GO AWAY WHILE U CAN, BIATCH!</string>
+    <string name="unauthorizedAccess">YOU SHOULD NOT BE HERE!</string>
     
     <string name="cancel">Dismiss</string>
     <string name="thanks">Thanks!</string>
